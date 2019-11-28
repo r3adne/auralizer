@@ -145,6 +145,10 @@
 			isa = PBXBuildFile;
 			fileRef = 294C1418C2B479E6F533AA04;
 		};
+		17481F67E62C1EAFE6E9DA70 = {
+			isa = PBXBuildFile;
+			fileRef = 7470D385D51F138DED9E955E;
+		};
 		8ADA4A2907D9D0BDDCDEC730 = {
 			isa = PBXBuildFile;
 			fileRef = 570FC97D643A82085F725650;
@@ -326,6 +330,13 @@
 			path = "../../JuceLibraryCode/include_juce_events.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
+		5B1EE947CCAC6EC17F29E7EE = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = "juce_dsp";
+			path = "~/JUCE/modules/juce_dsp";
+			sourceTree = "<absolute>";
+		};
 		6178F4C59D45E214D5F3F621 = {
 			isa = PBXFileReference;
 			explicitFileType = archive.ar;
@@ -366,6 +377,13 @@
 			lastKnownFileType = sourcecode.cpp.objcpp;
 			name = "include_juce_audio_processors.mm";
 			path = "../../JuceLibraryCode/include_juce_audio_processors.mm";
+			sourceTree = "SOURCE_ROOT";
+		};
+		7470D385D51F138DED9E955E = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.objcpp;
+			name = "include_juce_dsp.mm";
+			path = "../../JuceLibraryCode/include_juce_dsp.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
 		76674BDA880D8E11CBC81C7B = {
@@ -630,6 +648,7 @@
 				16116700E4C4C7BAB81E24FC,
 				0CD57E4A6778D63E1C34FA36,
 				CBF2C08400CF059838E03BA2,
+				5B1EE947CCAC6EC17F29E7EE,
 				A65D4BBB7D68A932F7DF4BE7,
 				BC72AB954FDE8B87E415B7C1,
 				0A45D99E087AFB7F2D6737A0,
@@ -658,6 +677,7 @@
 				8CF8188E23C0AD96E4BFEA29,
 				3C25BEF7023A46C26612FA8E,
 				294C1418C2B479E6F533AA04,
+				7470D385D51F138DED9E955E,
 				570FC97D643A82085F725650,
 				461E17127D7E7F2E986C3227,
 				98E63ED8C4C7490D1A21A76E,
@@ -727,7 +747,7 @@
 		65A00CC3D396F956840F0286 = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 			};
 			name = Debug;
 		};
@@ -772,15 +792,20 @@
 					"$(HOME)/JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
 					"../../JuceLibraryCode",
 					"$(HOME)/JUCE/modules",
+					"/usr/local/include/",
 					"$(HOME)/JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Info-VST3.plist;
 				INFOPLIST_PREPROCESS = NO;
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/VST3/";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"/usr/local/lib/\"",
+				);
 				LIBRARY_STYLE = Bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				OTHER_LDFLAGS = "-bundle -lauralizer";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				OTHER_LDFLAGS = "-bundle -lauralizer -lspatialaudio";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.auralizer;
 				PRODUCT_NAME = "auralizer";
 				USE_HEADERMAP = NO;
@@ -832,7 +857,7 @@
 				LIBRARY_STYLE = Bundle;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				OTHER_LDFLAGS = "-bundle -lauralizer";
+				OTHER_LDFLAGS = "-bundle -lauralizer -lspatialaudio";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.auralizer;
 				PRODUCT_NAME = "auralizer";
 				USE_HEADERMAP = NO;
@@ -874,15 +899,20 @@
 					"$(HOME)/JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
 					"../../JuceLibraryCode",
 					"$(HOME)/JUCE/modules",
+					"/usr/local/include/",
 					"$(HOME)/JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Info-AU.plist;
 				INFOPLIST_PREPROCESS = NO;
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"/usr/local/lib/\"",
+				);
 				LIBRARY_STYLE = Bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				OTHER_LDFLAGS = "-bundle -lauralizer";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				OTHER_LDFLAGS = "-bundle -lauralizer -lspatialaudio";
 				OTHER_REZFLAGS = "-d ppc_$ppc -d i386_$i386 -d ppc64_$ppc64 -d x86_64_$x86_64 -I /System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Versions/A/Headers -I \"$(DEVELOPER_DIR)/Extras/CoreAudio/AudioUnits/AUPublic/AUBase\" -I \"$(DEVELOPER_DIR)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/AudioUnit.framework/Headers\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.auralizer;
 				PRODUCT_NAME = "auralizer";
@@ -935,7 +965,7 @@
 				LIBRARY_STYLE = Bundle;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				OTHER_LDFLAGS = "-bundle -lauralizer";
+				OTHER_LDFLAGS = "-bundle -lauralizer -lspatialaudio";
 				OTHER_REZFLAGS = "-d ppc_$ppc -d i386_$i386 -d ppc64_$ppc64 -d x86_64_$x86_64 -I /System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Versions/A/Headers -I \"$(DEVELOPER_DIR)/Extras/CoreAudio/AudioUnits/AUPublic/AUBase\" -I \"$(DEVELOPER_DIR)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/AudioUnit.framework/Headers\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.auralizer;
 				PRODUCT_NAME = "auralizer";
@@ -975,13 +1005,18 @@
 					"$(HOME)/JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
 					"../../JuceLibraryCode",
 					"$(HOME)/JUCE/modules",
+					"/usr/local/include/",
 					"$(HOME)/JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Info-Standalone_Plugin.plist;
 				INFOPLIST_PREPROCESS = NO;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				OTHER_LDFLAGS = "-lauralizer";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"/usr/local/lib/\"",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				OTHER_LDFLAGS = "-lauralizer -lspatialaudio";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.auralizer;
 				PRODUCT_NAME = "auralizer";
 				USE_HEADERMAP = NO;
@@ -1027,7 +1062,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				OTHER_LDFLAGS = "-lauralizer";
+				OTHER_LDFLAGS = "-lauralizer -lspatialaudio";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.auralizer;
 				PRODUCT_NAME = "auralizer";
 				USE_HEADERMAP = NO;
@@ -1066,11 +1101,16 @@
 					"$(HOME)/JUCE/modules/juce_audio_processors/format_types/VST3_SDK",
 					"../../JuceLibraryCode",
 					"$(HOME)/JUCE/modules",
+					"/usr/local/include/",
 					"$(HOME)/JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"/usr/local/lib/\"",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.auralizer;
 				PRODUCT_NAME = "auralizer";
 				SKIP_INSTALL = YES;
@@ -1481,6 +1521,7 @@
 				DA29C7722D070C30976853E3,
 				D6A453A3306614BDF491A7AC,
 				38AF078B2A5C5BA92232444A,
+				17481F67E62C1EAFE6E9DA70,
 				8ADA4A2907D9D0BDDCDEC730,
 				CC6AA15B08ECAB38533E2D34,
 				4B38F95DCAB87392C41B6CF0,

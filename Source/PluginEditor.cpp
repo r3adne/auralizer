@@ -17,7 +17,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (300, 400);
+    setSize (300 * scalex, 400 * scaley);
 /*
  // Sliders
  Slider wetSlider;
@@ -28,7 +28,8 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 
  Slider yawSlider;
  Slider pitchSlider;
- Slider rollSlider;
+ // Slider rollSlider;
+ Slider distanceSlider;
 
  Slider directSlider;
  Slider earlySlider;
@@ -43,7 +44,8 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 
  Label yawSliderLabel;
  Label pitchSliderLabel;
- Label rollSliderLabel;
+ // Label rollSliderLabel;
+ Label distanceSliderLabel;
 
  Label directSliderLabel;
  Label earlySliderLabel;
@@ -51,7 +53,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
  */
 
     // wetSlider
-    wetSlider.setSliderStyle(Slider::LinearHorizontal);
+    wetSlider.setSliderStyle(Slider::LinearBar);
     wetSlider.setRange(0.0f, 2.0f, 0.01f);
     wetSlider.setValue(1.0f);
 
@@ -59,13 +61,16 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     wetSlider.setPopupMenuEnabled(false);
     addAndMakeVisible(wetSlider);
 
+
+
     wetSliderLabel.attachToComponent(&wetSlider, false);
     addAndMakeVisible(wetSliderLabel);
+    wetSliderLabel.setText("wet", dontSendNotification);
 
     wetSlider.addListener(this);
 
     // drySlider;
-    drySlider.setSliderStyle(Slider::LinearHorizontal);
+    drySlider.setSliderStyle(Slider::LinearBar);
     drySlider.setRange(0.0f, 2.0f, 0.01f);
     drySlider.setValue(1.0f);
 
@@ -75,11 +80,12 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 
     drySliderLabel.attachToComponent(&drySlider, false);
     addAndMakeVisible(drySliderLabel);
+    drySliderLabel.setText("dry", dontSendNotification);
 
     drySlider.addListener(this);
 
     // inSlider;
-    inSlider.setSliderStyle(Slider::Rotary);
+    inSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     inSlider.setRange(0.0f, 2.0f, 0.01f);
     inSlider.setValue(1.0f);
 
@@ -89,11 +95,12 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 
     inSliderLabel.attachToComponent(&inSlider, false);
     addAndMakeVisible(inSliderLabel);
+    inSliderLabel.setText("input", dontSendNotification);
 
     inSlider.addListener(this);
 
     // outSlider;
-    outSlider.setSliderStyle(Slider::Rotary);
+    outSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     outSlider.setRange(0.0f, 2.0f, 0.01f);
     outSlider.setValue(1.0f);
 
@@ -101,13 +108,14 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     outSlider.setPopupMenuEnabled(false);
     addAndMakeVisible(outSlider);
 
-    outSliderLabel.attachToComponent(&outSlider, false);
+//    outSliderLabel.attachToComponent(&outSlider, false);
     addAndMakeVisible(outSliderLabel);
+    outSliderLabel.setText("output", dontSendNotification);
 
     outSlider.addListener(this);
 
     // yawSlider;
-    yawSlider.setSliderStyle(Slider::LinearHorizontal);
+    yawSlider.setSliderStyle(Slider::LinearBar);
     yawSlider.setRange(-180.0f, 180.0f, 0.1f);
     yawSlider.setValue(0.0f);
 
@@ -115,13 +123,14 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     yawSlider.setPopupMenuEnabled(false);
     addAndMakeVisible(yawSlider);
 
-    yawSliderLabel.attachToComponent(&yawSlider, false);
+//    yawSliderLabel.attachToComponent(&yawSlider, false);
     addAndMakeVisible(yawSliderLabel);
+    yawSliderLabel.setText("yaw", dontSendNotification);
 
     yawSlider.addListener(this);
 
     // pitchSlider;
-    pitchSlider.setSliderStyle(Slider::LinearHorizontal);
+    pitchSlider.setSliderStyle(Slider::LinearBarVertical);
     pitchSlider.setRange(0.0f, 2.0f, 0.01f);
     pitchSlider.setValue(1.0f);
 
@@ -131,26 +140,42 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 
     pitchSliderLabel.attachToComponent(&pitchSlider, true);
     addAndMakeVisible(pitchSliderLabel);
+    pitchSliderLabel.setText("pitch", dontSendNotification);
 
     pitchSlider.addListener(this);
 
-    // rollSlider;
-    rollSlider.setSliderStyle(Slider::Rotary);
-    rollSlider.setRange(0.0f, 2.0f, 0.01f);
-    rollSlider.setValue(1.0f);
+    // rollSlider
+//    rollSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag); // ROLLTOGGLE
+//    rollSlider.setRange(0.0f, 2.0f, 0.01f); // ROLLTOGGLE
+//    rollSlider.setValue(1.0f); // ROLLTOGGLE
+//
+//    rollSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0); // ROLLTOGGLE
+//    rollSlider.setPopupMenuEnabled(false); // ROLLTOGGLE
+//    addAndMakeVisible(rollSlider); // ROLLTOGGLE
+//
+//    rollSliderLabel.attachToComponent(&rollSlider, false); // ROLLTOGGLE
+//    addAndMakeVisible(rollSliderLabel); // ROLLTOGGLE
+//    rollSliderLabel.setText("roll", dontSendNotification); // ROLLTOGGLE
+//
+//    rollSlider.addListener(this); // ROLLTOGGLE
 
-    rollSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
-    rollSlider.setPopupMenuEnabled(false);
-    addAndMakeVisible(rollSlider);
+    distSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag); // DISTTOGGLE
+    distSlider.setRange(0.0f, 2.0f, 0.01f); // DISTTOGGLE
+    distSlider.setValue(1.0f); // DISTTOGGLE
 
-    rollSliderLabel.attachToComponent(&rollSlider, false);
-    addAndMakeVisible(rollSliderLabel);
+    distSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0); // DISTTOGGLE
+    distSlider.setPopupMenuEnabled(false); // DISTTOGGLE
+    addAndMakeVisible(distSlider); // DISTTOGGLE
 
-    rollSlider.addListener(this);
+    distSliderLabel.attachToComponent(&distSlider, false); // DISTTOGGLE
+    addAndMakeVisible(distSliderLabel); // DISTTOGGLE
+    distSliderLabel.setText("distance", dontSendNotification); // DISTTOGGLE
+
+    distSlider.addListener(this); // DISTTOGGLE
 
 
     // directSlider;
-    directSlider.setSliderStyle(Slider::LinearHorizontal);
+    directSlider.setSliderStyle(Slider::LinearBar);
     directSlider.setRange(0.0f, 2.0f, 0.01f);
     directSlider.setValue(1.0f);
 
@@ -160,11 +185,12 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 
     directSliderLabel.attachToComponent(&directSlider, false);
     addAndMakeVisible(directSliderLabel);
+    directSliderLabel.setText("direct", dontSendNotification);
 
     directSlider.addListener(this);
 
     // earlySlider;
-    earlySlider.setSliderStyle(Slider::LinearHorizontal);
+    earlySlider.setSliderStyle(Slider::LinearBar);
     earlySlider.setRange(0.0f, 2.0f, 0.01f);
     earlySlider.setValue(1.0f);
 
@@ -174,11 +200,12 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 
     earlySliderLabel.attachToComponent(&earlySlider, false);
     addAndMakeVisible(earlySliderLabel);
+    earlySliderLabel.setText("early", dontSendNotification);
 
     earlySlider.addListener(this);
 
     // lateSlider;
-    lateSlider.setSliderStyle(Slider::LinearHorizontal);
+    lateSlider.setSliderStyle(Slider::LinearBar);
     lateSlider.setRange(0.0f, 2.0f, 0.01f);
     lateSlider.setValue(1.0f);
 
@@ -188,13 +215,14 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 
     lateSliderLabel.attachToComponent(&lateSlider, false);
     addAndMakeVisible(lateSliderLabel);
+    lateSliderLabel.setText("late", dontSendNotification);
 
     lateSlider.addListener(this);
 
 
 
     addAndMakeVisible(PresetsBox);
-    PresetsBox.onChange = [this] { changePreset(); };
+//    PresetsBox.onChange = [this] { changePreset(); };
 
 }
 
@@ -212,13 +240,13 @@ void AuralizerAudioProcessorEditor::paint (Graphics& g)
 
     g.setColour (Colours::black);
 
-    g.drawLine(0, 140, getWidth(), 140);
-    g.drawLine(0, 40, getWidth(), 140);
+    g.drawLine(0 * scalex, 140 * scaley, getWidth(), 140 * scaley);
+    g.drawLine(0 * scalex, 40 * scaley, getWidth(), 40 * scaley);
     
 
-    g.setFont (15.0f);
-    g.drawFittedText("auralizer", 8, 15, 130, 25, Justification::centred, 1);
-    g.drawFittedText("input", 251, 46, 47, 19, Justification::centred, 1);
+    g.setFont (15.0f * scalex);
+    g.drawFittedText("auralizer", 19 * scalex, 7.5 * scaley, 132 * scalex, 25 * scaley, Justification::centred, 1);
+//    g.drawFittedText("input", 251, 46, 47, 19, Justification::centred, 1);
 
 
 
@@ -232,9 +260,36 @@ void AuralizerAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 
-//    wetSlider.setBounds(<#int x#>, <#int y#>, <#int width#>, <#int height#>)
+    // header
+//    PresetsBox.setBounds(<#int x#>, <#int y#>, <#int width#>, <#int height#>)
+    PresetsBox.setBounds        (  187 * scalex,  15 * scaley,   93 * scalex,   17 * scaley);
+    // input section
+    directSlider.setBounds      (  20  * scalex, 60  * scaley,  140 * scalex,   10 * scaley);
+    earlySlider.setBounds       (  20  * scalex, 85  * scaley,  140 * scalex,   10 * scaley);
+    lateSlider.setBounds        (  20  * scalex, 110 * scaley,  140 * scalex,   10 * scaley);
 
-    
+    directSliderLabel.setBounds (  170 * scalex, 60  * scaley, 34.9 * scalex,   10 * scaley);
+    earlySliderLabel.setBounds  (  170 * scalex, 85  * scaley, 30.1 * scalex, 12.6 * scaley);
+    lateSliderLabel.setBounds   (  170 * scalex, 110 * scaley, 22.5 * scalex,   10 * scaley);
+
+    inSlider.setBounds          (  235 * scalex, 75  * scaley,   30 * scalex,   30 * scaley);
+    inSliderLabel.setBounds     (  225 * scalex, 45  * scaley,   47 * scalex,   19 * scaley);
+    // rotate section
+//  rollSlider.setBounds        (  130 * scalex, 180 * scaley,   40 * scalex,   40 * scaley); // ROLLTOGGLE
+    distSlider.setBounds        (  130 * scalex, 180 * scaley,   40 * scalex,   40 * scaley); // DISTTOGGLE
+    yawSlider.setBounds         (  48  * scalex, 240 * scaley,  200 * scalex,   16 * scaley);
+    pitchSlider.setBounds       (  255 * scalex, 165 * scaley,   20 * scalex,   91 * scaley);
+
+//  rollSliderLabel.setBounds   (141.5 * scalex, 165 * scaley, 16.9 * scalex,    9 * scaley); // ROLLTOGGLE
+    distSliderLabel.setBounds   (141.5 * scalex, 165 * scaley, 16.9 * scalex,    9 * scaley); // DISTTOGGLE
+    yawSliderLabel.setBounds    (141.5 * scalex, 260 * scaley,   22 * scalex,    9 * scaley);
+    pitchSliderLabel.setBounds  (  252 * scalex, 148 * scaley,   26 * scalex, 11.4 * scaley);
+    // output section
+    wetSlider.setBounds         (   20 * scalex, 340 * scaley,  140 * scalex,   16 * scaley);
+    drySlider.setBounds         (   20 * scalex, 296 * scaley,  140 * scalex,   16 * scaley);
+    outSlider.setBounds         (  236 * scalex, 320 * scaley,   30 * scalex,   30 * scaley);
+    outSliderLabel.setBounds    (  220 * scalex, 286 * scaley,   60 * scalex,   18 * scaley);
+
 }
 
 void AuralizerAudioProcessorEditor::sliderValueChanged(Slider* slider){
@@ -256,9 +311,12 @@ void AuralizerAudioProcessorEditor::sliderValueChanged(Slider* slider){
     else if (slider == &pitchSlider){
         processor.setSliderValue("pitchSlider", pitchSlider.getValue());
     }
-    else if (slider == &rollSlider){
-        processor.setSliderValue("rollSlider", rollSlider.getValue());
-    }
+//    else if (slider == &rollSlider){ // ROLLTOGGLE
+//        processor.setSliderValue("rollSlider", rollSlider.getValue()); // ROLLTOGGLE
+//    } // ROLLTOGGLE
+    else if (slider == &distSlider){ // DISTTOGGLE
+        processor.setSliderValue("distSlider", distSlider.getValue()); // DISTTOGGLE
+    } // DISTTOGGLE
     else if (slider == &directSlider){
         processor.setSliderValue("directSlider", directSlider.getValue());
     }

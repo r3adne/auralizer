@@ -39,11 +39,8 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     AuralizerAudioProcessor& processor;
-    
 
 
-
-    
     // Sliders
     Slider wetSlider;
     Slider drySlider;
@@ -53,7 +50,8 @@ private:
 
     Slider yawSlider;
     Slider pitchSlider;
-    Slider rollSlider;
+//    Slider rollSlider;  // ROLLTOGGLE
+    Slider distSlider; // DISTTOGGLE
 
     Slider directSlider;
     Slider earlySlider;
@@ -68,7 +66,9 @@ private:
 
     Label yawSliderLabel;
     Label pitchSliderLabel;
-    Label rollSliderLabel;
+
+//    Label rollSliderLabel; // ROLLTOGGLE
+    Label distSliderLabel; // DISTTOGGLE
 
     Label directSliderLabel;
     Label earlySliderLabel;
@@ -76,6 +76,11 @@ private:
 
     ComboBox PresetsBox;
 
+
+
+    // stuff for scaling the size of the enitre window
+    float scalex = 2.0f;
+    float scaley = 2.0f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AuralizerAudioProcessorEditor)
 };

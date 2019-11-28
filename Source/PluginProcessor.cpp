@@ -13,33 +13,7 @@
 #include <stdexcept>
 
 //==============================================================================
-AuralizerAudioProcessor::AuralizerAudioProcessor()
-#ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", AudioChannelSet::stereo(), true)
-                     #endif
-                       )
-#endif
-{
-    addParameter (wetAmt = new AudioParameterFloat("wetAmt", "Wet", 0.0f, 2.0f, 1.0f));
-    addParameter (dryAmt = new AudioParameterFloat("dryAmt", "Dry", 0.0f, 2.0f, 1.0f));
 
-    addParameter (inAmt = new AudioParameterFloat("inAmt", "Input", 0.0f, 2.0f, 1.0f));
-    addParameter (outAmt = new AudioParameterFloat("outAmt", "Output", 0.0f, 2.0f, 1.0f));
-
-    addParameter (yawAmt = new AudioParameterFloat("yawAmt", "Yaw", -180.0f, 180.0f, 0.0f));
-    addParameter (pitchAmt = new AudioParameterFloat("pitchAmt", "Pitch", -180.0f, -180.0f, 0.0f));
-    addParameter (rollAmt = new AudioParameterFloat("rollAmt", "Roll", -180.0f, 180.0f, 0.0f));
-
-    addParameter (dirAmt = new AudioParameterFloat("dirAmt", "Direct Level", 0.0f, 2.0f, 1.0f));
-    addParameter (earlyAmt = new AudioParameterFloat("earlyAmt", "Early Level", 0.0f, 2.0f, 1.0f));
-    addParameter (lateAmt = new AudioParameterFloat("lateAmt", "Late Level", 0.0f, 2.0f, 1.0f));
-
-}
 
 AuralizerAudioProcessor::~AuralizerAudioProcessor()
 {
@@ -113,6 +87,23 @@ void AuralizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+
+    _block_size = samplesPerBlock;
+    _sample_rate = sampleRate;
+
+
+    Ambi_block.setSize(getOrder[AMBISONIC_ORDER_NUMBER], samplesPerBlock);
+
+    position.fAzimuth = *yawAmt;
+    position.fDistance = *distAmt;
+    position.fElevation = *pitchAmt;
+    Encoder.Configure(AMBISONIC_ORDER_NUMBER, true, 0);
+//    Processor.Configure(AMBISONIC_ORDER_NUMBER, true, _block_size, 0);
+    Decoder.Configure(AMBISONIC_ORDER_NUMBER, true, kAmblib_Stereo);
+
+    ambi_buffer.Configure(AMBISONIC_ORDER_NUMBER, true, _block_size);
+
+    
 }
 
 void AuralizerAudioProcessor::releaseResources()
@@ -166,9 +157,16 @@ void AuralizerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
+
+
+
+
+
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
+
+
 
         // ..do something to the data...
     }
@@ -203,7 +201,8 @@ void AuralizerAudioProcessor::getStateInformation (MemoryBlock& destData)
 
     xml->setAttribute("yawAmt", (double) *yawAmt);
     xml->setAttribute("pitchAmt", (double) *pitchAmt);
-    xml->setAttribute("rollAmt", (double) *rollAmt);
+//    xml->setAttribute("rollAmt", (double) *rollAmt);
+    xml->setAttribute("distAmt", (double) *distAmt);
 
     xml->setAttribute("dirAmt", (double) *dirAmt);
     xml->setAttribute("earlyAmt", (double) *earlyAmt);
@@ -230,7 +229,8 @@ void AuralizerAudioProcessor::setStateInformation (const void* data, int sizeInB
 
             *yawAmt = (float) xmlState->getDoubleAttribute("yawAmt");
             *pitchAmt = (float) xmlState->getDoubleAttribute("pitchAmt");
-            *rollAmt = (float) xmlState->getDoubleAttribute("rollAmt");
+//            *rollAmt = (float) xmlState->getDoubleAttribute("rollAmt"); // ROLLTOGGLE
+            *distAmt = (float) xmlState->getDoubleAttribute("distAmt"); // DISTTOGGLE
 
             *dirAmt = (float) xmlState->getDoubleAttribute("dirAmt");
             *earlyAmt = (float) xmlState->getDoubleAttribute("earlyAmt");
@@ -262,9 +262,12 @@ void AuralizerAudioProcessor::setSliderValue(String name, float value){
     else if (name == "pitchSlider"){
         *pitchAmt = value;
     }
-    else if (name == "rollSlider"){
-        *rollAmt = value;
-    }
+//    else if (name == "rollSlider"){ // ROLLTOGGLE
+//        *rollAmt = value; // ROLLTOGGLE
+//    } // ROLLTOGGLE
+    else if (name == "distSlider"){ // DISTTOGGLE
+        *distAmt = value; // DISTTOGGLE
+    } // DISTTOGGLE
     else if (name == "directSlider"){
         *dirAmt = value;
     }

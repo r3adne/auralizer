@@ -19,7 +19,7 @@
 
 #include "AmbisonicBase.h"
 #include "BFormat.h"
-#include "kiss_fftr.h"
+#include "../source/kiss_fft/kiss_fftr.h"
 #include "AmbisonicPsychoacousticFilters.h"
 #include "AmbisonicZoomer.h"
 

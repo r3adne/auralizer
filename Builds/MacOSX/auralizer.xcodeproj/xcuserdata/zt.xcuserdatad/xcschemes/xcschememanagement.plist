@@ -22,12 +22,25 @@
 		<key>auralizer - Standalone Plugin.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>1</integer>
 		</dict>
 		<key>auralizer - VST3.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>3</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>2D91ACF066CBADCF21AD7377</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CABE5920382FEA79C4D4D752</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

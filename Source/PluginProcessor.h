@@ -1,17 +1,9 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
-
 #pragma once
-#include "../JuceLibraryCode/JuceHeader.h"
 
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "./libspatialaudio/include/Ambisonics.h"
+
+#define AMBISONIC_ORDER_NUMBER 2
 
 //==============================================================================
 /**
@@ -20,7 +12,26 @@ class AuralizerAudioProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
-    AuralizerAudioProcessor();
+    AuralizerAudioProcessor()
+    {
+        addParameter (wetAmt = new AudioParameterFloat("wetAmt", "Wet", 0.0f, 2.0f, 1.0f));
+        addParameter (dryAmt = new AudioParameterFloat("dryAmt", "Dry", 0.0f, 2.0f, 1.0f));
+
+        addParameter (inAmt = new AudioParameterFloat("inAmt", "Input", 0.0f, 2.0f, 1.0f));
+        addParameter (outAmt = new AudioParameterFloat("outAmt", "Output", 0.0f, 2.0f, 1.0f));
+
+        addParameter (yawAmt = new AudioParameterFloat("yawAmt", "Yaw", -180.0f, 180.0f, 0.0f));
+        addParameter (pitchAmt = new AudioParameterFloat("pitchAmt", "Pitch", -180.0f, -180.0f, 0.0f));
+//        addParameter (rollAmt = new AudioParameterFloat("rollAmt", "Roll", -180.0f, 180.0f, 0.0f)); // ROLLTOGGLE
+        addParameter (distAmt = new AudioParameterFloat("distanceAmt", "Distance", 0.1f, 100.0f, 5.0f)); // DISTTOGGLE
+
+        addParameter (dirAmt = new AudioParameterFloat("dirAmt", "Direct Level", 0.0f, 2.0f, 1.0f));
+        addParameter (earlyAmt = new AudioParameterFloat("earlyAmt", "Early Level", 0.0f, 2.0f, 1.0f));
+        addParameter (lateAmt = new AudioParameterFloat("lateAmt", "Late Level", 0.0f, 2.0f, 1.0f));
+
+        
+    }
+
     ~AuralizerAudioProcessor();
 
     //==============================================================================
@@ -67,8 +78,20 @@ public:
 private:
 
     // buffers
-//    CBFormat
+    CBFormat ambi_buffer;
+    AudioBuffer<float> Ambi_block;
 
+    // ambisonic processors
+    CAmbisonicEncoder Encoder;
+    CAmbisonicDecoder Decoder;
+//    CAmbisonicProcessor Processor;
+
+    PolarPoint position;
+
+
+    juce::dsp::ProcessorChain<juce::dsp::Convolution> convolutionEngine;
+    // add processorDuplicator for convolution
+    
 
     // preset and IR directory system
     String new_preset_name;
@@ -84,11 +107,16 @@ private:
 
     AudioParameterFloat* yawAmt;
     AudioParameterFloat* pitchAmt;
-    AudioParameterFloat* rollAmt;
+//    AudioParameterFloat* rollAmt; // ROLLTOGGLE
+    AudioParameterFloat* distAmt; // DISTTOGGLE
 
     AudioParameterFloat* dirAmt;
     AudioParameterFloat* earlyAmt;
     AudioParameterFloat* lateAmt;
+
+
+    int getOrder[4] = {1, 4, 9, 16};
+    int _block_size, _sample_rate;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AuralizerAudioProcessor)
