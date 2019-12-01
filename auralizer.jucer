@@ -3,6 +3,24 @@
 <JUCERPROJECT id="Uonl3S" name="auralizer" projectType="audioplug" jucerVersion="5.4.4"
               version="0.01" cppLanguageStandard="17">
   <MAINGROUP id="ErdQTp" name="auralizer">
+    <GROUP id="{72388854-B9A0-C410-E44B-53CD04B91E66}" name="FFTConvolver">
+      <GROUP id="{F72AB4DD-EAD2-78F2-F4AB-6B12F02A7145}" name="test">
+        <FILE id="yPSXYK" name="Test.cpp" compile="1" resource="0" file="Source/FFTConvolver/test/Test.cpp"/>
+      </GROUP>
+      <FILE id="jNZYVd" name="AudioFFT.cpp" compile="1" resource="0" file="Source/FFTConvolver/AudioFFT.cpp"/>
+      <FILE id="Ns6f9v" name="AudioFFT.h" compile="0" resource="0" file="Source/FFTConvolver/AudioFFT.h"/>
+      <FILE id="rXlLV1" name="COPYING.txt" compile="0" resource="1" file="Source/FFTConvolver/COPYING.txt"/>
+      <FILE id="JYWpcp" name="FFTConvolver.cpp" compile="1" resource="0"
+            file="Source/FFTConvolver/FFTConvolver.cpp"/>
+      <FILE id="XyG6Cv" name="FFTConvolver.h" compile="0" resource="0" file="Source/FFTConvolver/FFTConvolver.h"/>
+      <FILE id="WCAqAd" name="README.md" compile="0" resource="1" file="Source/FFTConvolver/README.md"/>
+      <FILE id="rgvivS" name="TwoStageFFTConvolver.cpp" compile="1" resource="0"
+            file="Source/FFTConvolver/TwoStageFFTConvolver.cpp"/>
+      <FILE id="AuNDf5" name="TwoStageFFTConvolver.h" compile="0" resource="0"
+            file="Source/FFTConvolver/TwoStageFFTConvolver.h"/>
+      <FILE id="RLVK9I" name="Utilities.cpp" compile="1" resource="0" file="Source/FFTConvolver/Utilities.cpp"/>
+      <FILE id="Y03zmO" name="Utilities.h" compile="0" resource="0" file="Source/FFTConvolver/Utilities.h"/>
+    </GROUP>
     <GROUP id="{7071CF97-D38A-7996-548C-9F3A268104CA}" name="Source">
       <FILE id="jftN5L" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

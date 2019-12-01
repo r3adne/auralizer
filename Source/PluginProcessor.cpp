@@ -97,9 +97,10 @@ void AuralizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     position.fAzimuth = *yawAmt;
     position.fDistance = *distAmt;
     position.fElevation = *pitchAmt;
+
     Encoder.Configure(AMBISONIC_ORDER_NUMBER, true, 0);
-//    Processor.Configure(AMBISONIC_ORDER_NUMBER, true, _block_size, 0);
     Decoder.Configure(AMBISONIC_ORDER_NUMBER, true, kAmblib_Stereo);
+    //    Processor.Configure(AMBISONIC_ORDER_NUMBER, true, _block_size, 0);
 
     ambi_buffer.Configure(AMBISONIC_ORDER_NUMBER, true, _block_size);
 
@@ -110,6 +111,10 @@ void AuralizerAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
+
+
+
+    // TODO: Release buffers
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -141,35 +146,48 @@ void AuralizerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
+    int blocksize = buffer.getNumSamples();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+    assert(totalNumInputChannels == 2 && totalNumOutputChannels == 2); // this is the stereo to stereo processor.
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
+    // sum the input channels into mono_block.
+    mono_block.copyFrom(0, 0, buffer, 0, 0, blocksize);
+    mono_block.addFrom (0, 0, buffer, 1, 0, blocksize);
 
+    // processes the mono input buffer through the ambisonic encoder.
+    // note: mono_block also functions as the dry buffer, but it cannot in the evenutal stereo-stereo version.
+    Encoder.Process((float*) mono_block.getReadPointer(0), blocksize, &ambi_buffer); //
 
+    // a loop through each channel of the ambisonic buffer
+    for (int current_ambi_channel = 0; current_ambi_channel < getOrder[AMBISONIC_ORDER_NUMBER]; current_ambi_channel++){
 
+        // copies the ambisonic buffer's current channel to the Current_conv_block.
+        ambi_buffer.ExtractStream(*Current_conv_block, current_ambi_channel, blocksize);
 
+        // convolves with the current channel...
+        Convolvers[current_ambi_channel]->process(*Current_conv_block, *Current_conv_block, (size_t) blocksize);
 
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-
-
-
-        // ..do something to the data...
+        // puts the convolved stream back into the ambisonic buffer...
+        ambi_buffer.InsertStream(*Current_conv_block, current_ambi_channel, blocksize);
     }
+
+    // decodes the ambisonic buffer into the array of write pointers.
+    Decoder.Process(&ambi_buffer, blocksize, buffer.getArrayOfWritePointers());
+
+
+    // the buffer now acts as the wet signal
+    buffer.applyGain(*wetAmt);
+
+    // and mono_block acts as the dry.
+    mono_block.applyGain(*dryAmt);
+
+    // add dry to wet. note: is this delay compensated? I guess we'll see. The docs on the convolver were confusing.
+    buffer.addFrom(0, 0, mono_block, 0, 0, blocksize);
+    buffer.addFrom(1, 0, mono_block, 0, 0, blocksize);
+
+    // this should be it.
+
+
 }
 
 //==============================================================================

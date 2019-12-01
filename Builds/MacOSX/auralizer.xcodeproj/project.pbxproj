@@ -77,6 +77,26 @@
 			isa = PBXBuildFile;
 			fileRef = B813DE6EFC547129F497ECB5;
 		};
+		0C903E4B3C9993C624A97D39 = {
+			isa = PBXBuildFile;
+			fileRef = 43539137A38F2696330F55F9;
+		};
+		582F61BCBEDA4CD11C1BD0E7 = {
+			isa = PBXBuildFile;
+			fileRef = 4DEAE78AF6565D480E1E795B;
+		};
+		5E4E9872B00E2DF776E5962A = {
+			isa = PBXBuildFile;
+			fileRef = 7B4C6A3D9567A9BB8CC4C502;
+		};
+		718F6EC282B6029884EDF445 = {
+			isa = PBXBuildFile;
+			fileRef = 07541D785E6E790165CDA82F;
+		};
+		E59BD124D6815C37DFFD8CC6 = {
+			isa = PBXBuildFile;
+			fileRef = 272A93B1C45D5583B919AB42;
+		};
 		B4B006A607796F705737B6E4 = {
 			isa = PBXBuildFile;
 			fileRef = C6249C49D98F29AB91873141;
@@ -84,6 +104,10 @@
 		95C7D292C1861B2D3B7597BF = {
 			isa = PBXBuildFile;
 			fileRef = 664F8B73A8D7C0CA54BBEB97;
+		};
+		3461C8267BA875C6B54CA55D = {
+			isa = PBXBuildFile;
+			fileRef = AB4CBFD989300BAB9B46BD5B;
 		};
 		1EC0F2F5EAB8E068F795C205 = {
 			isa = PBXBuildFile;
@@ -183,6 +207,20 @@
 			path = "~/JUCE/modules/juce_audio_utils";
 			sourceTree = "<absolute>";
 		};
+		07541D785E6E790165CDA82F = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = TwoStageFFTConvolver.cpp;
+			path = ../../Source/FFTConvolver/TwoStageFFTConvolver.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
+		09694B41F7637A142C0B44C3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = FFTConvolver.h;
+			path = ../../Source/FFTConvolver/FFTConvolver.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		0A45D99E087AFB7F2D6737A0 = {
 			isa = PBXFileReference;
 			lastKnownFileType = file;
@@ -274,6 +312,13 @@
 			path = System/Library/Frameworks/IOKit.framework;
 			sourceTree = SDKROOT;
 		};
+		272A93B1C45D5583B919AB42 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = Utilities.cpp;
+			path = ../../Source/FFTConvolver/Utilities.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
 		28D306E24B92EE191CDA102F = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -309,6 +354,13 @@
 			path = "../../JuceLibraryCode/include_juce_cryptography.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
+		3D8CC1782CA5FB6B527F07C8 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AudioFFT.h;
+			path = ../../Source/FFTConvolver/AudioFFT.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		41DC96646830232163ACE5F8 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.objcpp;
@@ -316,11 +368,32 @@
 			path = "../../JuceLibraryCode/include_juce_audio_basics.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
+		43539137A38F2696330F55F9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = Test.cpp;
+			path = ../../Source/FFTConvolver/test/Test.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
 		461E17127D7E7F2E986C3227 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.objcpp;
 			name = "include_juce_graphics.mm";
 			path = "../../JuceLibraryCode/include_juce_graphics.mm";
+			sourceTree = "SOURCE_ROOT";
+		};
+		4DEAE78AF6565D480E1E795B = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = AudioFFT.cpp;
+			path = ../../Source/FFTConvolver/AudioFFT.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
+		4F4C7B7126B75D60ABC8BA70 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BinaryData.h;
+			path = ../../JuceLibraryCode/BinaryData.h;
 			sourceTree = "SOURCE_ROOT";
 		};
 		570FC97D643A82085F725650 = {
@@ -336,6 +409,13 @@
 			name = "juce_dsp";
 			path = "~/JUCE/modules/juce_dsp";
 			sourceTree = "<absolute>";
+		};
+		5DFB8287A14DD9305BF4B619 = {
+			isa = PBXFileReference;
+			lastKnownFileType = file.md;
+			name = README.md;
+			path = ../../Source/FFTConvolver/README.md;
+			sourceTree = "SOURCE_ROOT";
 		};
 		6178F4C59D45E214D5F3F621 = {
 			isa = PBXFileReference;
@@ -393,6 +473,20 @@
 			path = ../../Source/PluginProcessor.h;
 			sourceTree = "SOURCE_ROOT";
 		};
+		7B4C6A3D9567A9BB8CC4C502 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = FFTConvolver.cpp;
+			path = ../../Source/FFTConvolver/FFTConvolver.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
+		81843782B602F9E8001B231F = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = TwoStageFFTConvolver.h;
+			path = ../../Source/FFTConvolver/TwoStageFFTConvolver.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		81D4754F9C56800175461FF3 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.objcpp;
@@ -427,6 +521,13 @@
 			name = CoreAudioKit.framework;
 			path = System/Library/Frameworks/CoreAudioKit.framework;
 			sourceTree = SDKROOT;
+		};
+		93E474DB0A6757F35D136482 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.txt;
+			name = COPYING.txt;
+			path = ../../Source/FFTConvolver/COPYING.txt;
+			sourceTree = "SOURCE_ROOT";
 		};
 		9643A9229F8F0FA4606BEA11 = {
 			isa = PBXFileReference;
@@ -477,6 +578,13 @@
 			path = "~/JUCE/modules/juce_audio_basics";
 			sourceTree = "<absolute>";
 		};
+		A5731DDC79E77CD86F469C10 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = Utilities.h;
+			path = ../../Source/FFTConvolver/Utilities.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		A65D4BBB7D68A932F7DF4BE7 = {
 			isa = PBXFileReference;
 			lastKnownFileType = file;
@@ -489,6 +597,13 @@
 			lastKnownFileType = sourcecode.c.h;
 			name = PluginEditor.h;
 			path = ../../Source/PluginEditor.h;
+			sourceTree = "SOURCE_ROOT";
+		};
+		AB4CBFD989300BAB9B46BD5B = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = BinaryData.cpp;
+			path = ../../JuceLibraryCode/BinaryData.cpp;
 			sourceTree = "SOURCE_ROOT";
 		};
 		AF5605E6200A0549F84E52E7 = {
@@ -617,6 +732,32 @@
 			path = "../../JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp";
 			sourceTree = "SOURCE_ROOT";
 		};
+		39E364CCF5DB3E4A8B56A016 = {
+			isa = PBXGroup;
+			children = (
+				43539137A38F2696330F55F9,
+			);
+			name = test;
+			sourceTree = "<group>";
+		};
+		9B7DBB28C03688C354AFBCEB = {
+			isa = PBXGroup;
+			children = (
+				39E364CCF5DB3E4A8B56A016,
+				4DEAE78AF6565D480E1E795B,
+				3D8CC1782CA5FB6B527F07C8,
+				93E474DB0A6757F35D136482,
+				7B4C6A3D9567A9BB8CC4C502,
+				09694B41F7637A142C0B44C3,
+				5DFB8287A14DD9305BF4B619,
+				07541D785E6E790165CDA82F,
+				81843782B602F9E8001B231F,
+				272A93B1C45D5583B919AB42,
+				A5731DDC79E77CD86F469C10,
+			);
+			name = FFTConvolver;
+			sourceTree = "<group>";
+		};
 		CF1CC9F9C5206B8844D8C67B = {
 			isa = PBXGroup;
 			children = (
@@ -631,6 +772,7 @@
 		1A791CF2F99DD58B8CE4E09A = {
 			isa = PBXGroup;
 			children = (
+				9B7DBB28C03688C354AFBCEB,
 				CF1CC9F9C5206B8844D8C67B,
 			);
 			name = auralizer;
@@ -662,6 +804,8 @@
 			isa = PBXGroup;
 			children = (
 				991A8315035497E8A1979DC5,
+				AB4CBFD989300BAB9B46BD5B,
+				4F4C7B7126B75D60ABC8BA70,
 				41DC96646830232163ACE5F8,
 				AF5605E6200A0549F84E52E7,
 				357A6629FBF6E423454AC443,
@@ -1509,8 +1653,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C903E4B3C9993C624A97D39,
+				582F61BCBEDA4CD11C1BD0E7,
+				5E4E9872B00E2DF776E5962A,
+				718F6EC282B6029884EDF445,
+				E59BD124D6815C37DFFD8CC6,
 				B4B006A607796F705737B6E4,
 				95C7D292C1861B2D3B7597BF,
+				3461C8267BA875C6B54CA55D,
 				1EC0F2F5EAB8E068F795C205,
 				D15D5C8AF77DE45E8E39D06E,
 				4622C2527735BCE96C231038,

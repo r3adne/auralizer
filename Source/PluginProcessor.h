@@ -2,6 +2,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "./libspatialaudio/include/Ambisonics.h"
+#include "./FFTConvolver/FFTConvolver.h"
+
 
 #define AMBISONIC_ORDER_NUMBER 2
 
@@ -21,7 +23,7 @@ public:
         addParameter (outAmt = new AudioParameterFloat("outAmt", "Output", 0.0f, 2.0f, 1.0f));
 
         addParameter (yawAmt = new AudioParameterFloat("yawAmt", "Yaw", -180.0f, 180.0f, 0.0f));
-        addParameter (pitchAmt = new AudioParameterFloat("pitchAmt", "Pitch", -180.0f, -180.0f, 0.0f));
+        addParameter (pitchAmt = new AudioParameterFloat("pitchAmt", "Pitch", -180.0f, 180.0f, 0.0f));
 //        addParameter (rollAmt = new AudioParameterFloat("rollAmt", "Roll", -180.0f, 180.0f, 0.0f)); // ROLLTOGGLE
         addParameter (distAmt = new AudioParameterFloat("distanceAmt", "Distance", 0.1f, 100.0f, 5.0f)); // DISTTOGGLE
 
@@ -80,6 +82,8 @@ private:
     // buffers
     CBFormat ambi_buffer;
     AudioBuffer<float> Ambi_block;
+    AudioBuffer<float> mono_block;
+    float* Current_conv_block[2048];
 
     // ambisonic processors
     CAmbisonicEncoder Encoder;
@@ -113,6 +117,8 @@ private:
     AudioParameterFloat* dirAmt;
     AudioParameterFloat* earlyAmt;
     AudioParameterFloat* lateAmt;
+
+    fftconvolver::FFTConvolver *Convolvers[16]; // 16-item array of pointers to FFTConvolver objects gives us a pretty smooth way to work with up to 3nd order signals
 
 
     int getOrder[4] = {1, 4, 9, 16};
