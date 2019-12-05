@@ -10,7 +10,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include <stdexcept>
+
 
 //==============================================================================
 
@@ -237,7 +237,7 @@ void AuralizerAudioProcessor::setStateInformation (const void* data, int sizeInB
     if (xmlState.get() != nullptr){
         if (xmlState->hasTagName("auralizerParam_0")){
             new_preset_name = xmlState->getStringAttribute("name");
-            IR_directory = xmlState->getStringAttribute("IRDir");
+            IR_directory = xmlState->getStringAttribute("IRDir"); // IRDir must be a valid path, relative to getcwd().
 
             *wetAmt = (float) xmlState->getDoubleAttribute("wetAmt");
             *dryAmt = (float) xmlState->getDoubleAttribute("dryAmt");
@@ -254,10 +254,109 @@ void AuralizerAudioProcessor::setStateInformation (const void* data, int sizeInB
             *earlyAmt = (float) xmlState->getDoubleAttribute("earlyAmt");
             *lateAmt = (float) xmlState->getDoubleAttribute("lateAmt");
 
-//            load_irs();
+            boost::filesystem::path IRDirPath(IR_directory.getCharPointer());
+//
+//            if (! exists(IRDirPath)){ // if IRDirPath is an invalid path, we'll throw.
+//                assert(0); // yikes
+//            }
+//            else if (! is_directory(IRDirPath)){
+//                assert(!1); // I'm so sorry dad
+//            }
+
+            loadIRs(IRDirPath);
+            
         }
 
     }
+}
+
+void AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath){
+    // TODO: read each IR from the IR_directory.
+
+    AudioFormat *audioFormat = formatManager.getDefaultFormat();
+    
+    boost::filesystem::path dirIRPath  (boost::filesystem::current_path());
+    boost::filesystem::path earlyIRPath(boost::filesystem::current_path());
+    boost::filesystem::path lateIRPath (boost::filesystem::current_path());
+
+
+    // append the IRDirPath to each IR path. note that /= is the append operator.
+    dirIRPath   /= IRDirPath;
+    earlyIRPath /= IRDirPath;
+    lateIRPath  /= IRDirPath;
+
+    // append the correct filename to each path
+    dirIRPath   /= "direct_IR_Ambisonic-order2.wav";
+    earlyIRPath /=  "early_IR_Ambisonic-order2.wav";
+    lateIRPath  /=   "late_IR_Ambisonic-order2.wav";
+
+    // instantiates a juce::File from the  boost::filesystem::path
+    juce::File dirIRFile    (  dirIRPath.generic_string());
+    juce::File earlyIRFile  (earlyIRPath.generic_string());
+    juce::File lateIRFile   ( lateIRPath.generic_string());
+
+    /*
+     OKAY SO;
+     juce:: file i/o is rather unnnecessarily conovluted. As such, this note references how we should be able to make that work.
+
+     // this manages the input streaming from a juce::File to...
+     (juce_core) FileInputStream(const File &fileToRead);
+
+     // this, which takes the string and the format of the file.
+     (juce_audio_formats) AudioFormatReader(InputStream* sourceStream, const String& formatName)
+     // this has a read function which reads to buffers.
+     */
+
+    // creates juce::MemoryMappedAudioFormatReaders for each IR, maps them all. NOTE: this is probably relatively slow. Could we do this serially?
+    if (dirIRFile.hasFileExtension(".wav") && earlyIRFile.hasFileExtension(".wav") && lateIRFile.hasFileExtension(".wav")){
+
+        MemoryMappedAudioFormatReader *dirReader = audioFormat->createMemoryMappedReader(dirIRFile);
+        MemoryMappedAudioFormatReader *earlyReader = audioFormat->createMemoryMappedReader(earlyIRFile);
+        MemoryMappedAudioFormatReader *lateReader = audioFormat->createMemoryMappedReader(lateIRFile);
+
+        dirReader->mapEntireFile();
+        earlyReader->mapEntireFile();
+        lateReader->mapEntireFile();
+
+        // clear each IR buffer
+        dirIR.clear();
+        earlyIR.clear();
+        lateIR.clear();
+
+        dirIR.setSize   (getOrder[AMBISONIC_ORDER_NUMBER], (int) dirReader->lengthInSamples   );
+        earlyIR.setSize (getOrder[AMBISONIC_ORDER_NUMBER], (int) earlyReader->lengthInSamples );
+        lateIR.setSize  (getOrder[AMBISONIC_ORDER_NUMBER], (int) lateReader->lengthInSamples  );
+
+        dirReader->read  (dirIR.getArrayOfWritePointers(),   getOrder[AMBISONIC_ORDER_NUMBER], 0, (int) dirReader->lengthInSamples  );
+        earlyReader->read(earlyIR.getArrayOfWritePointers(), getOrder[AMBISONIC_ORDER_NUMBER], 0, (int) earlyReader->lengthInSamples);
+        lateReader->read (lateIR.getArrayOfWritePointers(),  getOrder[AMBISONIC_ORDER_NUMBER], 0, (int) lateReader->lengthInSamples );
+
+    // Akito's good ideas
+    // irs just switch pointer instead of switching buffer entirely.
+    // stft on new IR is done in separate thread from stft on new samples/convolution.
+
+        updateIRs();
+    }
+    else throw std::invalid_argument("Directory does not contain impulse response \".wav\" files.");
+}
+
+void AuralizerAudioProcessor::updateIRs(){
+
+    // for each ambisonic channel
+    for (int i = 0; i < getOrder[AMBISONIC_ORDER_NUMBER]; i++){
+        // gets rid of the current contents of the full ir buffer and resets the size.
+        fullIR[i].clear();
+        fullIR[i].setSize(1, ir_length);
+
+        // this adds each buffer's 0th channel to the full ir's 0th channel with the correct gain
+        fullIR[i].copyFromWithRamp (0, 0, earlyIR.getReadPointer(i, 0), ir_length, *earlyAmt, *earlyAmt);
+        fullIR[i].addFromWithRamp  (0, 0, lateIR.getReadPointer(i, 0),  ir_length, *lateAmt,  *lateAmt);
+        fullIR[i].addFromWithRamp  (0, 0, dirIR.getReadPointer(i, 0),   ir_length, *dirAmt,   *dirAmt);
+
+        // initializes the convolver with the IR
+        Convolvers[i]->init(CONV_BLOCK_SIZE, fullIR[i].getReadPointer(0), ir_length);
+    }
+
 }
 
 
@@ -297,6 +396,11 @@ void AuralizerAudioProcessor::setSliderValue(String name, float value){
     }
     else { // error
         throw std::invalid_argument("received invalid slider name argument");
+    }
+
+    // if any of the sliders that change the actual IR are changed
+    if (name == "earlySlider" || name == "lateSlider" || name == "directSlider"){
+        updateIRs();
     }
 
 }

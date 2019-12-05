@@ -220,8 +220,14 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     lateSlider.addListener(this);
 
 
+    addAndMakeVisible(PresetButton);
+    PresetButton.onClick = [this]{ presetButtonClicked(); };
 
-    addAndMakeVisible(PresetsBox);
+
+
+
+
+//    addAndMakeVisible(PresetsBox);
 //    PresetsBox.onChange = [this] { changePreset(); };
 
 }
@@ -262,33 +268,37 @@ void AuralizerAudioProcessorEditor::resized()
 
     // header
 //    PresetsBox.setBounds(<#int x#>, <#int y#>, <#int width#>, <#int height#>)
-    PresetsBox.setBounds        (  187 * scalex,  15 * scaley,   93 * scalex,   17 * scaley);
+//    PresetsBox.setBounds        (  187 * scalex,  15 * scaley,   93 * scalex,   17 * scaley);
+
+    PresetButton.setBounds      (  187 * scalex, 15  * scaley,  93  * scalex,     17 * scaley);
     // input section
-    directSlider.setBounds      (  20  * scalex, 60  * scaley,  140 * scalex,   10 * scaley);
-    earlySlider.setBounds       (  20  * scalex, 85  * scaley,  140 * scalex,   10 * scaley);
-    lateSlider.setBounds        (  20  * scalex, 110 * scaley,  140 * scalex,   10 * scaley);
+    directSlider.setBounds      (  20  * scalex, 60  * scaley,  140 * scalex,     10 * scaley);
+    earlySlider.setBounds       (  20  * scalex, 85  * scaley,  140 * scalex,     10 * scaley);
+    lateSlider.setBounds        (  20  * scalex, 110 * scaley,  140 * scalex,     10 * scaley);
 
-    directSliderLabel.setBounds (  170 * scalex, 60  * scaley, 34.9 * scalex,   10 * scaley);
-    earlySliderLabel.setBounds  (  170 * scalex, 85  * scaley, 30.1 * scalex, 12.6 * scaley);
-    lateSliderLabel.setBounds   (  170 * scalex, 110 * scaley, 22.5 * scalex,   10 * scaley);
+    directSliderLabel.setBounds (  170 * scalex, 60  * scaley,  34.9 * scalex,    10 * scaley);
+    earlySliderLabel.setBounds  (  170 * scalex, 85  * scaley,  30.1 * scalex,  12.6 * scaley);
+    lateSliderLabel.setBounds   (  170 * scalex, 110 * scaley,  22.5 * scalex,    10 * scaley);
 
-    inSlider.setBounds          (  235 * scalex, 75  * scaley,   30 * scalex,   30 * scaley);
-    inSliderLabel.setBounds     (  225 * scalex, 45  * scaley,   47 * scalex,   19 * scaley);
+    inSlider.setBounds          (  235 * scalex, 75  * scaley,   30 * scalex,     30 * scaley);
+    inSliderLabel.setBounds     (  225 * scalex, 45  * scaley,   47 * scalex,     19 * scaley);
     // rotate section
-//  rollSlider.setBounds        (  130 * scalex, 180 * scaley,   40 * scalex,   40 * scaley); // ROLLTOGGLE
-    distSlider.setBounds        (  130 * scalex, 180 * scaley,   40 * scalex,   40 * scaley); // DISTTOGGLE
-    yawSlider.setBounds         (  48  * scalex, 240 * scaley,  200 * scalex,   16 * scaley);
-    pitchSlider.setBounds       (  255 * scalex, 165 * scaley,   20 * scalex,   91 * scaley);
+//  rollSlider.setBounds        (  130 * scalex, 180 * scaley,   40 * scalex,     40 * scaley); // ROLLTOGGLE
+    distSlider.setBounds        (  130 * scalex, 180 * scaley,   40 * scalex,     40 * scaley); // DISTTOGGLE
+    yawSlider.setBounds         (  48  * scalex, 240 * scaley,  200 * scalex,     16 * scaley);
+    pitchSlider.setBounds       (  255 * scalex, 165 * scaley,   20 * scalex,     91 * scaley);
 
-//  rollSliderLabel.setBounds   (141.5 * scalex, 165 * scaley, 16.9 * scalex,    9 * scaley); // ROLLTOGGLE
-    distSliderLabel.setBounds   (141.5 * scalex, 165 * scaley, 16.9 * scalex,    9 * scaley); // DISTTOGGLE
-    yawSliderLabel.setBounds    (141.5 * scalex, 260 * scaley,   22 * scalex,    9 * scaley);
-    pitchSliderLabel.setBounds  (  252 * scalex, 148 * scaley,   26 * scalex, 11.4 * scaley);
+//  rollSliderLabel.setBounds   (141.5 * scalex, 165 * scaley, 16.9 * scalex,      9 * scaley); // ROLLTOGGLE
+    distSliderLabel.setBounds   (141.5 * scalex, 165 * scaley, 16.9 * scalex,      9 * scaley); // DISTTOGGLE
+    yawSliderLabel.setBounds    (141.5 * scalex, 260 * scaley,   22 * scalex,      9 * scaley);
+    pitchSliderLabel.setBounds  (  252 * scalex, 148 * scaley,   26 * scalex,   11.4 * scaley);
     // output section
-    wetSlider.setBounds         (   20 * scalex, 340 * scaley,  140 * scalex,   16 * scaley);
-    drySlider.setBounds         (   20 * scalex, 296 * scaley,  140 * scalex,   16 * scaley);
-    outSlider.setBounds         (  236 * scalex, 320 * scaley,   30 * scalex,   30 * scaley);
-    outSliderLabel.setBounds    (  220 * scalex, 286 * scaley,   60 * scalex,   18 * scaley);
+    wetSlider.setBounds         (   20 * scalex, 340 * scaley,  140 * scalex,     16 * scaley);
+    drySlider.setBounds         (   20 * scalex, 296 * scaley,  140 * scalex,     16 * scaley);
+    outSlider.setBounds         (  236 * scalex, 320 * scaley,   30 * scalex,     30 * scaley);
+    outSliderLabel.setBounds    (  220 * scalex, 286 * scaley,   60 * scalex,     18 * scaley);
+
+
 
 }
 
@@ -325,5 +335,22 @@ void AuralizerAudioProcessorEditor::sliderValueChanged(Slider* slider){
     }
     else if (slider == &lateSlider){
         processor.setSliderValue("lateSlider", lateSlider.getValue());
+    }
+}
+
+void AuralizerAudioProcessorEditor::presetButtonClicked(){
+    FileChooser chooser("Select a .xml auralizer preset.", {}, "*.xml");
+    if (chooser.browseForFileToOpen()){
+        juce::File presetFile = chooser.getResult();
+        if (! presetFile.exists()){
+            throw std::invalid_argument("The chosen file does not exist");
+        }
+        else if (! presetFile.existsAsFile()){
+            throw std::invalid_argument("The chosen file is a directory, not a file.");
+        }
+        else if (! presetFile.hasFileExtension(".xml")){
+            throw std::invalid_argument("The chosen file does not have \".xml\" extension");
+        }
+        processor.setXmlFileToLoad(presetFile);
     }
 }

@@ -33,6 +33,7 @@ public:
 
 private:
     void sliderValueChanged(Slider* slider) override;
+    void presetButtonClicked();
 
 public:
     
@@ -75,7 +76,8 @@ private:
     Label earlySliderLabel;
     Label lateSliderLabel;
 
-    ComboBox PresetsBox;
+//    ComboBox PresetsBox;
+    TextButton PresetButton;
 
 
 

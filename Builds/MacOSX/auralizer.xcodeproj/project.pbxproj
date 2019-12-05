@@ -949,7 +949,7 @@
 				);
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				OTHER_LDFLAGS = "-bundle -lauralizer -lspatialaudio";
+				OTHER_LDFLAGS = "-bundle -lauralizer -lspatialaudio -lboost_filesystem";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.auralizer;
 				PRODUCT_NAME = "auralizer";
 				USE_HEADERMAP = NO;
@@ -1001,7 +1001,7 @@
 				LIBRARY_STYLE = Bundle;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				OTHER_LDFLAGS = "-bundle -lauralizer -lspatialaudio";
+				OTHER_LDFLAGS = "-bundle -lauralizer -lspatialaudio -lboost_filesystem";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.auralizer;
 				PRODUCT_NAME = "auralizer";
 				USE_HEADERMAP = NO;
@@ -1056,7 +1056,7 @@
 				);
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				OTHER_LDFLAGS = "-bundle -lauralizer -lspatialaudio";
+				OTHER_LDFLAGS = "-bundle -lauralizer -lspatialaudio -lboost_filesystem";
 				OTHER_REZFLAGS = "-d ppc_$ppc -d i386_$i386 -d ppc64_$ppc64 -d x86_64_$x86_64 -I /System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Versions/A/Headers -I \"$(DEVELOPER_DIR)/Extras/CoreAudio/AudioUnits/AUPublic/AUBase\" -I \"$(DEVELOPER_DIR)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/AudioUnit.framework/Headers\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.auralizer;
 				PRODUCT_NAME = "auralizer";
@@ -1109,7 +1109,7 @@
 				LIBRARY_STYLE = Bundle;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				OTHER_LDFLAGS = "-bundle -lauralizer -lspatialaudio";
+				OTHER_LDFLAGS = "-bundle -lauralizer -lspatialaudio -lboost_filesystem";
 				OTHER_REZFLAGS = "-d ppc_$ppc -d i386_$i386 -d ppc64_$ppc64 -d x86_64_$x86_64 -I /System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Versions/A/Headers -I \"$(DEVELOPER_DIR)/Extras/CoreAudio/AudioUnits/AUPublic/AUBase\" -I \"$(DEVELOPER_DIR)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/AudioUnit.framework/Headers\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.auralizer;
 				PRODUCT_NAME = "auralizer";
@@ -1160,7 +1160,7 @@
 					"\"/usr/local/lib/\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				OTHER_LDFLAGS = "-lauralizer -lspatialaudio";
+				OTHER_LDFLAGS = "-lauralizer -lspatialaudio -lboost_filesystem";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.auralizer;
 				PRODUCT_NAME = "auralizer";
 				USE_HEADERMAP = NO;
@@ -1206,7 +1206,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				OTHER_LDFLAGS = "-lauralizer -lspatialaudio";
+				OTHER_LDFLAGS = "-lauralizer -lspatialaudio -lboost_filesystem";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.auralizer;
 				PRODUCT_NAME = "auralizer";
 				USE_HEADERMAP = NO;

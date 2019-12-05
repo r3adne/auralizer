@@ -32,7 +32,7 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <XCODE_MAC targetFolder="Builds/MacOSX" extraLinkerFlags="-lspatialaudio&#10;">
+    <XCODE_MAC targetFolder="Builds/MacOSX" extraLinkerFlags="-lspatialaudio&#10;-lboost_filesystem">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" osxCompatibility="10.14 SDK" libraryPath="/usr/local/lib/&#10;"
                        headerPath="/usr/local/include/&#10;"/>

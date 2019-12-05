@@ -3,13 +3,21 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "./libspatialaudio/include/Ambisonics.h"
 #include "./FFTConvolver/FFTConvolver.h"
-
+#include <stdexcept>
+#include <string>
+#include <boost/filesystem.hpp>
+//#include <filesystem>
 
 #define AMBISONIC_ORDER_NUMBER 2
+
+#define CONV_BLOCK_SIZE 512
+
 
 //==============================================================================
 /**
 */
+const int getOrder[4] = {1, 4, 9, 16};
+
 class AuralizerAudioProcessor  : public AudioProcessor
 {
 public:
@@ -30,6 +38,9 @@ public:
         addParameter (dirAmt = new AudioParameterFloat("dirAmt", "Direct Level", 0.0f, 2.0f, 1.0f));
         addParameter (earlyAmt = new AudioParameterFloat("earlyAmt", "Early Level", 0.0f, 2.0f, 1.0f));
         addParameter (lateAmt = new AudioParameterFloat("lateAmt", "Late Level", 0.0f, 2.0f, 1.0f));
+
+        formatManager.registerBasicFormats();
+
 
         
     }
@@ -77,7 +88,14 @@ public:
         preset_directory = new_preset_directory;
     }
 
+    void setXmlFileToLoad(juce::File fileToLoad){
+        xmlFileToLoad = juce::File(fileToLoad);
+    }
+
 private:
+
+    void loadIRs(boost::filesystem::path IRDirPath);
+    void updateIRs();
 
     // buffers
     CBFormat ambi_buffer;
@@ -102,6 +120,28 @@ private:
     String preset_directory;
     String IR_directory;
 
+    //    std::filesystem::path
+    juce::File xmlFileToLoad;
+    juce::File dirIRFile;
+    juce::File earlyIRFile;
+    juce::File lateIRFile;
+
+
+    AudioFormatManager formatManager;
+    std::unique_ptr<AudioFormatReaderSource> readerSource;
+
+    
+
+
+    AudioBuffer<float> dirIR;
+    AudioBuffer<float> earlyIR;
+    AudioBuffer<float> lateIR;
+    AudioBuffer<float> fullIR[getOrder[AMBISONIC_ORDER_NUMBER]];
+
+
+
+    unsigned int ir_length;
+
     // params
     AudioParameterFloat* wetAmt;
     AudioParameterFloat* dryAmt;
@@ -118,10 +158,12 @@ private:
     AudioParameterFloat* earlyAmt;
     AudioParameterFloat* lateAmt;
 
-    fftconvolver::FFTConvolver *Convolvers[16]; // 16-item array of pointers to FFTConvolver objects gives us a pretty smooth way to work with up to 3nd order signals
+    fftconvolver::FFTConvolver *Convolvers[getOrder[AMBISONIC_ORDER_NUMBER]]; // 9-item array of pointers to FFTConvolver objects gives us a pretty smooth way to work with up to 3nd order signals
+
+    
 
 
-    int getOrder[4] = {1, 4, 9, 16};
+
     int _block_size, _sample_rate;
 
     //==============================================================================
