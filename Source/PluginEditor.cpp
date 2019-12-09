@@ -58,8 +58,13 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     wetSlider.setValue(1.0f);
 
     wetSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+//    wetSlider.setColour(Slider::backgroundColourId, Colours::darkgrey);
+    wetSlider.setColour(Slider::trackColourId, Colours::darkgrey);
+
     wetSlider.setPopupMenuEnabled(false);
+
     addAndMakeVisible(wetSlider);
+
 
 
 
@@ -75,6 +80,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     drySlider.setValue(1.0f);
 
     drySlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+    drySlider.setColour(Slider::trackColourId, Colours::darkgrey);
     drySlider.setPopupMenuEnabled(false);
     addAndMakeVisible(drySlider);
 
@@ -90,6 +96,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     inSlider.setValue(1.0f);
 
     inSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+    inSlider.setColour(Slider::trackColourId, Colours::darkgrey);
     inSlider.setPopupMenuEnabled(false);
     addAndMakeVisible(inSlider);
 
@@ -105,6 +112,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     outSlider.setValue(1.0f);
 
     outSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+    outSlider.setColour(Slider::trackColourId, Colours::darkgrey);
     outSlider.setPopupMenuEnabled(false);
     addAndMakeVisible(outSlider);
 
@@ -120,6 +128,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     yawSlider.setValue(0.0f);
 
     yawSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+    yawSlider.setColour(Slider::trackColourId, Colours::darkgrey);
     yawSlider.setPopupMenuEnabled(false);
     addAndMakeVisible(yawSlider);
 
@@ -135,6 +144,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     pitchSlider.setValue(1.0f);
 
     pitchSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+    pitchSlider.setColour(Slider::trackColourId, Colours::darkgrey);
     pitchSlider.setPopupMenuEnabled(false);
     addAndMakeVisible(pitchSlider);
 
@@ -150,6 +160,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 //    rollSlider.setValue(1.0f); // ROLLTOGGLE
 //
 //    rollSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0); // ROLLTOGGLE
+//    rollSlider.setColour(Slider::trackColourId, Colours::darkgrey); // ROLLTOGGLE
 //    rollSlider.setPopupMenuEnabled(false); // ROLLTOGGLE
 //    addAndMakeVisible(rollSlider); // ROLLTOGGLE
 //
@@ -164,6 +175,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     distSlider.setValue(1.0f); // DISTTOGGLE
 
     distSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0); // DISTTOGGLE
+    distSlider.setColour(Slider::trackColourId, Colours::darkgrey); // DISTTOGGLE
     distSlider.setPopupMenuEnabled(false); // DISTTOGGLE
     addAndMakeVisible(distSlider); // DISTTOGGLE
 
@@ -180,6 +192,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     directSlider.setValue(1.0f);
 
     directSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+    directSlider.setColour(Slider::trackColourId, Colours::darkgrey);
     directSlider.setPopupMenuEnabled(false);
     addAndMakeVisible(directSlider);
 
@@ -195,6 +208,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     earlySlider.setValue(1.0f);
 
     earlySlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+    earlySlider.setColour(Slider::trackColourId, Colours::darkgrey);
     earlySlider.setPopupMenuEnabled(false);
     addAndMakeVisible(earlySlider);
 
@@ -210,6 +224,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     lateSlider.setValue(1.0f);
 
     lateSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+    lateSlider.setColour(Slider::trackColourId, Colours::darkgrey);
     lateSlider.setPopupMenuEnabled(false);
     addAndMakeVisible(lateSlider);
 
@@ -240,18 +255,23 @@ AuralizerAudioProcessorEditor::~AuralizerAudioProcessorEditor()
 void AuralizerAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+//    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
 
 
+    g.fillAll (Colour(PixelARGB(240,60,60,70)));
 
-    g.setColour (Colours::black);
+    g.setColour (Colours::white);
 
     g.drawLine(0 * scalex, 140 * scaley, getWidth(), 140 * scaley);
     g.drawLine(0 * scalex, 40 * scaley, getWidth(), 40 * scaley);
     
 
+
     g.setFont (15.0f * scalex);
     g.drawFittedText("auralizer", 19 * scalex, 7.5 * scaley, 132 * scalex, 25 * scaley, Justification::centred, 1);
+
+    g.setFont (11.0f);
+    g.drawFittedText("alpha build 0.0.3", 20 * scalex, 380 * scaley, 60 * scalex, 16 * scaley, Justification::centred, 1);
 //    g.drawFittedText("input", 251, 46, 47, 19, Justification::centred, 1);
 
 

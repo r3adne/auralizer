@@ -91,7 +91,7 @@ void AuralizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     _block_size = samplesPerBlock;
     _sample_rate = sampleRate;
 
-
+    mono_block.setSize(1, _block_size);
     Ambi_block.setSize(getOrder[AMBISONIC_ORDER_NUMBER], samplesPerBlock);
 
     position.fAzimuth = *yawAmt;
@@ -147,10 +147,12 @@ void AuralizerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     int blocksize = buffer.getNumSamples();
+    mono_block.setSize(1, blocksize);
 
     assert(totalNumInputChannels == 2 && totalNumOutputChannels == 2); // this is the stereo to stereo processor.
 
     // sum the input channels into mono_block.
+
     mono_block.copyFrom(0, 0, buffer, 0, 0, blocksize);
     mono_block.addFrom (0, 0, buffer, 1, 0, blocksize);
 
@@ -165,7 +167,7 @@ void AuralizerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         ambi_buffer.ExtractStream(*Current_conv_block, current_ambi_channel, blocksize);
 
         // convolves with the current channel...
-        Convolvers[current_ambi_channel]->process(*Current_conv_block, *Current_conv_block, (size_t) blocksize);
+        Convolvers[current_ambi_channel].process(*Current_conv_block, *Current_conv_block, (size_t) blocksize);
 
         // puts the convolved stream back into the ambisonic buffer...
         ambi_buffer.InsertStream(*Current_conv_block, current_ambi_channel, blocksize);
@@ -236,9 +238,17 @@ void AuralizerAudioProcessor::setStateInformation (const void* data, int sizeInB
     std::unique_ptr<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
     if (xmlState.get() != nullptr){
         if (xmlState->hasTagName("auralizerParam_0")){
-            new_preset_name = xmlState->getStringAttribute("name");
-            IR_directory = xmlState->getStringAttribute("IRDir"); // IRDir must be a valid path, relative to getcwd().
+            new_preset_name = "default_presetSaveName";
+//            new_preset_name = xmlState->getStringAttribute("name");
+//
+//            if (IR_directory == ""){
+//                IR_directory = "~/Documents/auralizer/presets/";
+//            }
+//            else{
+//                IR_directory = xmlState->getStringAttribute("IRDir"); // IRDir must be a valid path.
+//            }
 
+            IR_directory = "~/Documents/auralizer/presets/";
             *wetAmt = (float) xmlState->getDoubleAttribute("wetAmt");
             *dryAmt = (float) xmlState->getDoubleAttribute("dryAmt");
 
@@ -260,7 +270,7 @@ void AuralizerAudioProcessor::setStateInformation (const void* data, int sizeInB
 //                assert(0); // yikes
 //            }
 //            else if (! is_directory(IRDirPath)){
-//                assert(!1); // I'm so sorry dad
+//                assert(!1); // oof
 //            }
 
             loadIRs(IRDirPath);
@@ -270,46 +280,85 @@ void AuralizerAudioProcessor::setStateInformation (const void* data, int sizeInB
     }
 }
 
+bool AuralizerAudioProcessor::loadPreset()
+/*
+ Loads the xml file representing a preset stored at xmlFileToLoad and sets the relevant settings.
+
+ some of this functionality is likely a duplicate of setStateInformation() but I've done it separately here because there it's an xml binary and here it's an .xml file. Regardless, that could be changed easily.
+
+ Returns true if the file is found and loaded, otherwise returns false.
+ */
+{
+    std::unique_ptr<XmlElement> xmlState = XmlDocument(xmlFileToLoad).getDocumentElement();
+
+    if (xmlState != nullptr){
+        if (xmlState->hasTagName("auralizerParam_0")){
+            new_preset_name = xmlState->getStringAttribute("name");
+            IR_directory = xmlState->getStringAttribute("IRDir");
+            // note that IRDir may be relative... It will most likely be "./" if preset IRs are stored in the same directory as the presets themselves, which they generally will be for the moment.
+            // Nonetheless, this is in place in case that changes.
+
+            *wetAmt = (float) xmlState->getDoubleAttribute("wetAmt");
+            *dryAmt = (float) xmlState->getDoubleAttribute("dryAmt");
+
+            *inAmt = (float) xmlState->getDoubleAttribute("inAmt");
+            *outAmt = (float) xmlState->getDoubleAttribute("outAmt");
+
+            *yawAmt = (float) xmlState->getDoubleAttribute("yawAmt");
+            *pitchAmt = (float) xmlState->getDoubleAttribute("pitchAmt");
+//            *rollAmt = (float) xmlState->getDoubleAttribute("rollAmt"); // ROLLTOGGLE
+            *distAmt = (float) xmlState->getDoubleAttribute("distAmt"); // DISTTOGGLE
+
+            *dirAmt = (float) xmlState->getDoubleAttribute("dirAmt");
+            *earlyAmt = (float) xmlState->getDoubleAttribute("earlyAmt");
+            *lateAmt = (float) xmlState->getDoubleAttribute("lateAmt");
+
+            boost::filesystem::path IRDirPath(IR_directory.getCharPointer());
+            loadIRs(IRDirPath);
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
 void AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath){
     // TODO: read each IR from the IR_directory.
 
     AudioFormat *audioFormat = formatManager.getDefaultFormat();
     
-    boost::filesystem::path dirIRPath  (boost::filesystem::current_path());
-    boost::filesystem::path earlyIRPath(boost::filesystem::current_path());
-    boost::filesystem::path lateIRPath (boost::filesystem::current_path());
+//    boost::filesystem::path dirIRPath  (boost::filesystem::current_path());
+//    boost::filesystem::path earlyIRPath(boost::filesystem::current_path());
+//    boost::filesystem::path lateIRPath (boost::filesystem::current_path());
+
+    boost::filesystem::path dirIRPath (IRDirPath);
+    boost::filesystem::path earlyIRPath (IRDirPath);
+    boost::filesystem::path lateIRPath (IRDirPath);
 
 
     // append the IRDirPath to each IR path. note that /= is the append operator.
-    dirIRPath   /= IRDirPath;
-    earlyIRPath /= IRDirPath;
-    lateIRPath  /= IRDirPath;
+//    dirIRPath   /= IRDirPath;
+//    earlyIRPath /= IRDirPath;
+//    lateIRPath  /= IRDirPath;
+
+    dirIRPath /= new_preset_name.toUTF8();
+    earlyIRPath /= new_preset_name.toUTF8();
+    lateIRPath /= new_preset_name.toUTF8();
 
     // append the correct filename to each path
-    dirIRPath   /= "direct_IR_Ambisonic-order2.wav";
-    earlyIRPath /=  "early_IR_Ambisonic-order2.wav";
-    lateIRPath  /=   "late_IR_Ambisonic-order2.wav";
+    dirIRPath   /= "direct.wav";
+    earlyIRPath /=  "early.wav";
+    lateIRPath  /=   "late.wav";
 
     // instantiates a juce::File from the  boost::filesystem::path
     juce::File dirIRFile    (  dirIRPath.generic_string());
     juce::File earlyIRFile  (earlyIRPath.generic_string());
     juce::File lateIRFile   ( lateIRPath.generic_string());
 
-    /*
-     OKAY SO;
-     juce:: file i/o is rather unnnecessarily conovluted. As such, this note references how we should be able to make that work.
-
-     // this manages the input streaming from a juce::File to...
-     (juce_core) FileInputStream(const File &fileToRead);
-
-     // this, which takes the string and the format of the file.
-     (juce_audio_formats) AudioFormatReader(InputStream* sourceStream, const String& formatName)
-     // this has a read function which reads to buffers.
-     */
-
     // creates juce::MemoryMappedAudioFormatReaders for each IR, maps them all. NOTE: this is probably relatively slow. Could we do this serially?
-    if (dirIRFile.hasFileExtension(".wav") && earlyIRFile.hasFileExtension(".wav") && lateIRFile.hasFileExtension(".wav")){
-
+    if (dirIRFile.hasFileExtension(".wav") && earlyIRFile.hasFileExtension(".wav") && lateIRFile.hasFileExtension(".wav"))
+    {
         MemoryMappedAudioFormatReader *dirReader = audioFormat->createMemoryMappedReader(dirIRFile);
         MemoryMappedAudioFormatReader *earlyReader = audioFormat->createMemoryMappedReader(earlyIRFile);
         MemoryMappedAudioFormatReader *lateReader = audioFormat->createMemoryMappedReader(lateIRFile);
@@ -327,6 +376,8 @@ void AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath){
         earlyIR.setSize (getOrder[AMBISONIC_ORDER_NUMBER], (int) earlyReader->lengthInSamples );
         lateIR.setSize  (getOrder[AMBISONIC_ORDER_NUMBER], (int) lateReader->lengthInSamples  );
 
+        ir_length = std::max(std::max(dirReader->lengthInSamples, earlyReader->lengthInSamples), lateReader->lengthInSamples);
+
         dirReader->read  (dirIR.getArrayOfWritePointers(),   getOrder[AMBISONIC_ORDER_NUMBER], 0, (int) dirReader->lengthInSamples  );
         earlyReader->read(earlyIR.getArrayOfWritePointers(), getOrder[AMBISONIC_ORDER_NUMBER], 0, (int) earlyReader->lengthInSamples);
         lateReader->read (lateIR.getArrayOfWritePointers(),  getOrder[AMBISONIC_ORDER_NUMBER], 0, (int) lateReader->lengthInSamples );
@@ -336,6 +387,7 @@ void AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath){
     // stft on new IR is done in separate thread from stft on new samples/convolution.
 
         updateIRs();
+//        dirReader->
     }
     else throw std::invalid_argument("Directory does not contain impulse response \".wav\" files.");
 }
@@ -354,7 +406,7 @@ void AuralizerAudioProcessor::updateIRs(){
         fullIR[i].addFromWithRamp  (0, 0, dirIR.getReadPointer(i, 0),   ir_length, *dirAmt,   *dirAmt);
 
         // initializes the convolver with the IR
-        Convolvers[i]->init(CONV_BLOCK_SIZE, fullIR[i].getReadPointer(0), ir_length);
+        Convolvers[i].init(CONV_BLOCK_SIZE, fullIR[i].getReadPointer(0), ir_length);
     }
 
 }
@@ -404,13 +456,6 @@ void AuralizerAudioProcessor::setSliderValue(String name, float value){
     }
 
 }
-
-
-
-
-
-
-
 
 
 //==============================================================================

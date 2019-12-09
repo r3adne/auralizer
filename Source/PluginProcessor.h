@@ -41,8 +41,10 @@ public:
 
         formatManager.registerBasicFormats();
 
+//        for (int i = 0; i < getOrder[AMBISONIC_ORDER_NUMBER]; i++){
+//            Convolvers[i] = fftconvolver::FFTConvolver();
+//        }
 
-        
     }
 
     ~AuralizerAudioProcessor();
@@ -79,6 +81,9 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    bool loadPreset();
+    
+
 
     void setSliderValue(String name, float Value);
     void setNewPresetName(String name){
@@ -91,6 +96,7 @@ public:
     void setXmlFileToLoad(juce::File fileToLoad){
         xmlFileToLoad = juce::File(fileToLoad);
     }
+
 
 private:
 
@@ -116,9 +122,9 @@ private:
     
 
     // preset and IR directory system
-    String new_preset_name;
+    String new_preset_name = "default_presetSaveName";
     String preset_directory;
-    String IR_directory;
+    String IR_directory = "~/Documents/auralizer/presets/";
 
     //    std::filesystem::path
     juce::File xmlFileToLoad;
@@ -158,7 +164,7 @@ private:
     AudioParameterFloat* earlyAmt;
     AudioParameterFloat* lateAmt;
 
-    fftconvolver::FFTConvolver *Convolvers[getOrder[AMBISONIC_ORDER_NUMBER]]; // 9-item array of pointers to FFTConvolver objects gives us a pretty smooth way to work with up to 3nd order signals
+    fftconvolver::FFTConvolver Convolvers[getOrder[AMBISONIC_ORDER_NUMBER]]; // 9-item array of (formerly pointers to) FFTConvolver objects gives us a pretty smooth way to work with up to 3nd order signals
 
     
 
