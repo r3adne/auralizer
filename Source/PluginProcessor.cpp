@@ -163,7 +163,7 @@ void AuralizerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     if (! processlock){
         // sum the input channels into mono_block.
         for (int i = 0; i < blocksize; i++){
-            Current_mono_block[i] = buffer.getSample(0, i) + buffer.getSample(1, i);
+            Current_mono_block[i] = (buffer.getSample(0, i) + buffer.getSample(1, i)) * *inAmt;
         }
 
         // processes the mono input buffer through the ambisonic encoder.
@@ -202,8 +202,8 @@ void AuralizerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     //    mono_block.applyGain(*dryAmt);
         for (int sampleNum = 0; sampleNum < blocksize; sampleNum++){
             Current_mono_block[sampleNum] *= *dryAmt;
-            buffer.setSample(0, sampleNum, (Current_mono_block[sampleNum] * *dryAmt) + buffer.getSample(0, sampleNum));
-            buffer.setSample(1, sampleNum, (Current_mono_block[sampleNum] * *dryAmt) + buffer.getSample(1, sampleNum));
+            buffer.setSample(0, sampleNum, ((Current_mono_block[sampleNum] * *dryAmt) + buffer.getSample(0, sampleNum)) * *outAmt);
+            buffer.setSample(1, sampleNum, ((Current_mono_block[sampleNum] * *dryAmt) + buffer.getSample(1, sampleNum)) * *outAmt);
         }
         // add dry to wet. note: is this delay compensated? I guess we'll see. The docs on the convolver were confusing.
     //    buffer.addFrom(0, 0, mono_block, 0, 0, blocksize);
