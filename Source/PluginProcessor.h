@@ -41,9 +41,15 @@ public:
 
         formatManager.registerBasicFormats();
 
+        Current_mono_block   =  (float *) malloc(2048*sizeof(float));
+        Processed_conv_block =  (float *) malloc(2048*sizeof(float));
+        Current_conv_block   =  (float *) malloc(2048*sizeof(float));
+
 //        for (int i = 0; i < getOrder[AMBISONIC_ORDER_NUMBER]; i++){
 //            Convolvers[i] = fftconvolver::FFTConvolver();
 //        }
+
+        processlock = true;
 
     }
 
@@ -98,6 +104,8 @@ public:
     }
 
 
+    float* Current_conv_block;
+    float* Processed_conv_block;
 private:
 
     void loadIRs(boost::filesystem::path IRDirPath);
@@ -107,7 +115,12 @@ private:
     CBFormat ambi_buffer;
     AudioBuffer<float> Ambi_block;
     AudioBuffer<float> mono_block;
-    float* Current_conv_block[2048];
+//    AudioBuffer<float> Current_conv_block;
+    float* Current_mono_block;
+
+    
+
+    const float* fullIR_ptr[16];
 
     // ambisonic processors
     CAmbisonicEncoder Encoder;
@@ -146,7 +159,9 @@ private:
 
 
 
-    unsigned int ir_length;
+    unsigned int ir_length = 10000;
+    bool processlock = true;
+    bool ConvolverActive[getOrder[AMBISONIC_ORDER_NUMBER]];
 
     // params
     AudioParameterFloat* wetAmt;

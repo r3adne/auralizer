@@ -99,7 +99,7 @@ bool FFTConvolver::init(size_t blockSize, const Sample* ir, size_t irLen)
 
   if (irLen == 0)
   {
-    return true;
+//    return false; ///////////
   }
   
   _blockSize = NextPowerOf2(blockSize);
@@ -153,12 +153,14 @@ void FFTConvolver::process(const Sample* input, Sample* output, size_t len)
   }
 
   size_t processed = 0;
+    
   while (processed < len)
   {
     const bool inputBufferWasEmpty = (_inputBufferFill == 0);
     const size_t processing = std::min(len-processed, _blockSize-_inputBufferFill);
     const size_t inputBufferPos = _inputBufferFill;
-    ::memcpy(_inputBuffer.data()+inputBufferPos, input+processed, processing * sizeof(Sample));
+      _inputBuffer.resize(processing*sizeof(Sample));
+    memcpy(_inputBuffer.data()+inputBufferPos, input+processed, processing * sizeof(Sample));
 
     // Forward FFT
     CopyAndPad(_fftBuffer, &_inputBuffer[0], _blockSize); 

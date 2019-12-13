@@ -189,7 +189,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     // directSlider;
     directSlider.setSliderStyle(Slider::LinearBar);
     directSlider.setRange(0.0f, 2.0f, 0.01f);
-    directSlider.setValue(1.0f);
+    directSlider.setValue(1.0f, dontSendNotification);
 
     directSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
     directSlider.setColour(Slider::trackColourId, Colours::darkgrey);
@@ -205,7 +205,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     // earlySlider;
     earlySlider.setSliderStyle(Slider::LinearBar);
     earlySlider.setRange(0.0f, 2.0f, 0.01f);
-    earlySlider.setValue(1.0f);
+    earlySlider.setValue(1.0f, dontSendNotification);
 
     earlySlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
     earlySlider.setColour(Slider::trackColourId, Colours::darkgrey);
@@ -221,7 +221,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     // lateSlider;
     lateSlider.setSliderStyle(Slider::LinearBar);
     lateSlider.setRange(0.0f, 2.0f, 0.01f);
-    lateSlider.setValue(1.0f);
+    lateSlider.setValue(1.0f, dontSendNotification);
 
     lateSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
     lateSlider.setColour(Slider::trackColourId, Colours::darkgrey);
@@ -372,5 +372,6 @@ void AuralizerAudioProcessorEditor::presetButtonClicked(){
             throw std::invalid_argument("The chosen file does not have \".xml\" extension");
         }
         processor.setXmlFileToLoad(presetFile);
+        processor.loadPreset();
     }
 }

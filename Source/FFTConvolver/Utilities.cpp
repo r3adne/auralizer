@@ -57,8 +57,10 @@ void Sum(Sample* FFTCONVOLVER_RESTRICT result,
 
 void ComplexMultiplyAccumulate(SplitComplex& result, const SplitComplex& a, const SplitComplex& b)
 {
-  assert(result.size() == a.size());
-  assert(result.size() == b.size());
+    if (result.size() != a.size() || result.size() != b.size()){
+        assert(false);
+    }
+
   ComplexMultiplyAccumulate(result.re(), result.im(), a.re(), a.im(), b.re(), b.im(), result.size());
 }
 

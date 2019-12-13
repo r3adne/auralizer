@@ -93,13 +93,22 @@ void AuralizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
     mono_block.setSize(1, _block_size);
     Ambi_block.setSize(getOrder[AMBISONIC_ORDER_NUMBER], samplesPerBlock);
+//    Current_conv_block.setSize(1, _block_size);
+//    convBlock_ptr = Current_conv_block.getReadPointer(0);
+//    memset(&Current_conv_block, 0.0f, 2048);
+//    memset(&Current_mono_block, 0.0f, 2048);
+
+
+    Encoder.Configure(AMBISONIC_ORDER_NUMBER, true, 0);
+    Decoder.Configure(AMBISONIC_ORDER_NUMBER, true, kAmblib_Stereo);
+
+
 
     position.fAzimuth = *yawAmt;
     position.fDistance = *distAmt;
     position.fElevation = *pitchAmt;
 
-    Encoder.Configure(AMBISONIC_ORDER_NUMBER, true, 0);
-    Decoder.Configure(AMBISONIC_ORDER_NUMBER, true, kAmblib_Stereo);
+
     //    Processor.Configure(AMBISONIC_ORDER_NUMBER, true, _block_size, 0);
 
     ambi_buffer.Configure(AMBISONIC_ORDER_NUMBER, true, _block_size);
@@ -147,48 +156,61 @@ void AuralizerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     int blocksize = buffer.getNumSamples();
-    mono_block.setSize(1, blocksize);
+
 
     assert(totalNumInputChannels == 2 && totalNumOutputChannels == 2); // this is the stereo to stereo processor.
 
-    // sum the input channels into mono_block.
+    if (! processlock){
+        // sum the input channels into mono_block.
+        for (int i = 0; i < blocksize; i++){
+            Current_mono_block[i] = buffer.getSample(0, i) + buffer.getSample(1, i);
+        }
 
-    mono_block.copyFrom(0, 0, buffer, 0, 0, blocksize);
-    mono_block.addFrom (0, 0, buffer, 1, 0, blocksize);
+        // processes the mono input buffer through the ambisonic encoder.
+        // note: mono_block also functions as the dry buffer, but it cannot in the evenutal stereo-stereo version.
+        Encoder.Process(Current_mono_block, blocksize, &ambi_buffer); //
 
-    // processes the mono input buffer through the ambisonic encoder.
-    // note: mono_block also functions as the dry buffer, but it cannot in the evenutal stereo-stereo version.
-    Encoder.Process((float*) mono_block.getReadPointer(0), blocksize, &ambi_buffer); //
+        // a loop through each channel of the ambisonic buffer
+        for (int current_ambi_channel = 0; current_ambi_channel < getOrder[AMBISONIC_ORDER_NUMBER]; current_ambi_channel++){
 
-    // a loop through each channel of the ambisonic buffer
-    for (int current_ambi_channel = 0; current_ambi_channel < getOrder[AMBISONIC_ORDER_NUMBER]; current_ambi_channel++){
 
-        // copies the ambisonic buffer's current channel to the Current_conv_block.
-        ambi_buffer.ExtractStream(*Current_conv_block, current_ambi_channel, blocksize);
 
-        // convolves with the current channel...
-        Convolvers[current_ambi_channel].process(*Current_conv_block, *Current_conv_block, (size_t) blocksize);
+            // copies the ambisonic buffer's current channel to the Current_conv_block.
+            ambi_buffer.ExtractStream(Current_conv_block, current_ambi_channel, blocksize);
 
-        // puts the convolved stream back into the ambisonic buffer...
-        ambi_buffer.InsertStream(*Current_conv_block, current_ambi_channel, blocksize);
+
+            if (! processlock){
+            // convolves with the current channel...
+            Convolvers[current_ambi_channel].process(Current_conv_block, Processed_conv_block, (size_t) blocksize);
+
+            // puts the convolved stream back into the ambisonic buffer...
+            ambi_buffer.InsertStream(Processed_conv_block, current_ambi_channel, blocksize);
+            }
+            else{
+                ambi_buffer.InsertStream(Current_conv_block, current_ambi_channel, blocksize);
+            }
+        }
+
+        // decodes the ambisonic buffer into the array of write pointers.
+        Decoder.Process(&ambi_buffer, blocksize, buffer.getArrayOfWritePointers());
+
+
+        // the buffer now acts as the wet signal
+        buffer.applyGain(*wetAmt);
+
+        // and mono_block acts as the dry.
+    //    mono_block.applyGain(*dryAmt);
+        for (int sampleNum = 0; sampleNum < blocksize; sampleNum++){
+            Current_mono_block[sampleNum] *= *dryAmt;
+            buffer.setSample(0, sampleNum, (Current_mono_block[sampleNum] * *dryAmt) + buffer.getSample(0, sampleNum));
+            buffer.setSample(1, sampleNum, (Current_mono_block[sampleNum] * *dryAmt) + buffer.getSample(1, sampleNum));
+        }
+        // add dry to wet. note: is this delay compensated? I guess we'll see. The docs on the convolver were confusing.
+    //    buffer.addFrom(0, 0, mono_block, 0, 0, blocksize);
+    //    buffer.addFrom(1, 0, mono_block, 0, 0, blocksize);
+
+        // this should be it.
     }
-
-    // decodes the ambisonic buffer into the array of write pointers.
-    Decoder.Process(&ambi_buffer, blocksize, buffer.getArrayOfWritePointers());
-
-
-    // the buffer now acts as the wet signal
-    buffer.applyGain(*wetAmt);
-
-    // and mono_block acts as the dry.
-    mono_block.applyGain(*dryAmt);
-
-    // add dry to wet. note: is this delay compensated? I guess we'll see. The docs on the convolver were confusing.
-    buffer.addFrom(0, 0, mono_block, 0, 0, blocksize);
-    buffer.addFrom(1, 0, mono_block, 0, 0, blocksize);
-
-    // this should be it.
-
 
 }
 
@@ -209,6 +231,7 @@ void AuralizerAudioProcessor::getStateInformation (MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    processlock = true;
     std::unique_ptr<XmlElement> xml (new XmlElement ("auralizerParam_0"));
     xml->setAttribute("name", new_preset_name);
     xml->setAttribute("IRDir", IR_directory);
@@ -228,6 +251,7 @@ void AuralizerAudioProcessor::getStateInformation (MemoryBlock& destData)
     xml->setAttribute("earlyAmt", (double) *earlyAmt);
     xml->setAttribute("lateAmt", (double) *lateAmt);
     copyXmlToBinary(*xml, destData);
+    processlock = false;
 
 }
 
@@ -235,6 +259,7 @@ void AuralizerAudioProcessor::setStateInformation (const void* data, int sizeInB
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    processlock = true;
     std::unique_ptr<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
     if (xmlState.get() != nullptr){
         if (xmlState->hasTagName("auralizerParam_0")){
@@ -274,6 +299,7 @@ void AuralizerAudioProcessor::setStateInformation (const void* data, int sizeInB
 //            }
 
             loadIRs(IRDirPath);
+            processlock = false;
             
         }
 
@@ -289,10 +315,11 @@ bool AuralizerAudioProcessor::loadPreset()
  Returns true if the file is found and loaded, otherwise returns false.
  */
 {
+    processlock = true;
     std::unique_ptr<XmlElement> xmlState = XmlDocument(xmlFileToLoad).getDocumentElement();
 
     if (xmlState != nullptr){
-        if (xmlState->hasTagName("auralizerParam_0")){
+//        if (xmlState->hasTagName("auralizerParam_0")){
             new_preset_name = xmlState->getStringAttribute("name");
             IR_directory = xmlState->getStringAttribute("IRDir");
             // note that IRDir may be relative... It will most likely be "./" if preset IRs are stored in the same directory as the presets themselves, which they generally will be for the moment.
@@ -316,7 +343,7 @@ bool AuralizerAudioProcessor::loadPreset()
             boost::filesystem::path IRDirPath(IR_directory.getCharPointer());
             loadIRs(IRDirPath);
             return true;
-        }
+//        }
     }
     return false;
 }
@@ -324,8 +351,6 @@ bool AuralizerAudioProcessor::loadPreset()
 
 
 void AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath){
-    // TODO: read each IR from the IR_directory.
-
     AudioFormat *audioFormat = formatManager.getDefaultFormat();
     
 //    boost::filesystem::path dirIRPath  (boost::filesystem::current_path());
@@ -385,6 +410,7 @@ void AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath){
     // Akito's good ideas
     // irs just switch pointer instead of switching buffer entirely.
     // stft on new IR is done in separate thread from stft on new samples/convolution.
+    // override the function that checks valid input/output config and add mutex.
 
         updateIRs();
 //        dirReader->
@@ -395,20 +421,24 @@ void AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath){
 void AuralizerAudioProcessor::updateIRs(){
 
     // for each ambisonic channel
+    processlock = true;
     for (int i = 0; i < getOrder[AMBISONIC_ORDER_NUMBER]; i++){
         // gets rid of the current contents of the full ir buffer and resets the size.
         fullIR[i].clear();
         fullIR[i].setSize(1, ir_length);
 
+//        dirIR.setSize()
+        fullIR_ptr[i] = fullIR[i].getReadPointer(0);
+
         // this adds each buffer's 0th channel to the full ir's 0th channel with the correct gain
-        fullIR[i].copyFromWithRamp (0, 0, earlyIR.getReadPointer(i, 0), ir_length, *earlyAmt, *earlyAmt);
+        fullIR[i].addFromWithRamp (0, 0, earlyIR.getReadPointer(i, 0), ir_length, *earlyAmt, *earlyAmt);
         fullIR[i].addFromWithRamp  (0, 0, lateIR.getReadPointer(i, 0),  ir_length, *lateAmt,  *lateAmt);
         fullIR[i].addFromWithRamp  (0, 0, dirIR.getReadPointer(i, 0),   ir_length, *dirAmt,   *dirAmt);
 
         // initializes the convolver with the IR
-        Convolvers[i].init(CONV_BLOCK_SIZE, fullIR[i].getReadPointer(0), ir_length);
+        ConvolverActive[i] = Convolvers[i].init(CONV_BLOCK_SIZE, fullIR_ptr[i], ir_length);
     }
-
+    processlock = false;
 }
 
 
@@ -453,6 +483,10 @@ void AuralizerAudioProcessor::setSliderValue(String name, float value){
     // if any of the sliders that change the actual IR are changed
     if (name == "earlySlider" || name == "lateSlider" || name == "directSlider"){
         updateIRs();
+    }
+    if (name == "yawSlider" || name == "pitchSlider" || name == "rollSlider" || name == "distSlider"){
+        Encoder.Refresh();
+        Decoder.Refresh();
     }
 
 }
