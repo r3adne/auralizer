@@ -52,7 +52,7 @@ private:
 
     Slider yawSlider;
     Slider pitchSlider;
-//    Slider rollSlider;  // ROLLTOGGLE
+    Slider rollSlider;  // ROLLTOGGLE
     Slider distSlider; // DISTTOGGLE
 
     Slider directSlider;
@@ -69,7 +69,7 @@ private:
     Label yawSliderLabel;
     Label pitchSliderLabel;
 
-//    Label rollSliderLabel; // ROLLTOGGLE
+    Label rollSliderLabel; // ROLLTOGGLE
     Label distSliderLabel; // DISTTOGGLE
 
     Label directSliderLabel;

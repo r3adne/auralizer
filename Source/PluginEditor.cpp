@@ -155,20 +155,20 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     pitchSlider.addListener(this);
 
     // rollSlider
-//    rollSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag); // ROLLTOGGLE
-//    rollSlider.setRange(0.0f, 2.0f, 0.01f); // ROLLTOGGLE
-//    rollSlider.setValue(1.0f); // ROLLTOGGLE
+    rollSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag); // ROLLTOGGLE
+    rollSlider.setRange(0.0f, 2.0f, 0.01f); // ROLLTOGGLE
+    rollSlider.setValue(1.0f); // ROLLTOGGLE
 //
-//    rollSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0); // ROLLTOGGLE
-//    rollSlider.setColour(Slider::trackColourId, Colours::darkgrey); // ROLLTOGGLE
-//    rollSlider.setPopupMenuEnabled(false); // ROLLTOGGLE
-//    addAndMakeVisible(rollSlider); // ROLLTOGGLE
+    rollSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0); // ROLLTOGGLE
+    rollSlider.setColour(Slider::trackColourId, Colours::darkgrey); // ROLLTOGGLE
+    rollSlider.setPopupMenuEnabled(false); // ROLLTOGGLE
+    addAndMakeVisible(rollSlider); // ROLLTOGGLE
 //
-//    rollSliderLabel.attachToComponent(&rollSlider, false); // ROLLTOGGLE
-//    addAndMakeVisible(rollSliderLabel); // ROLLTOGGLE
-//    rollSliderLabel.setText("roll", dontSendNotification); // ROLLTOGGLE
+    rollSliderLabel.attachToComponent(&rollSlider, false); // ROLLTOGGLE
+    addAndMakeVisible(rollSliderLabel); // ROLLTOGGLE
+    rollSliderLabel.setText("roll", dontSendNotification); // ROLLTOGGLE
 //
-//    rollSlider.addListener(this); // ROLLTOGGLE
+    rollSlider.addListener(this); // ROLLTOGGLE
 
     distSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag); // DISTTOGGLE
     distSlider.setRange(0.0f, 2.0f, 0.01f); // DISTTOGGLE
@@ -303,12 +303,12 @@ void AuralizerAudioProcessorEditor::resized()
     inSlider.setBounds          (  235 * scalex, 75  * scaley,   30 * scalex,     30 * scaley);
     inSliderLabel.setBounds     (  225 * scalex, 45  * scaley,   47 * scalex,     19 * scaley);
     // rotate section
-//  rollSlider.setBounds        (  130 * scalex, 180 * scaley,   40 * scalex,     40 * scaley); // ROLLTOGGLE
+  rollSlider.setBounds        (  130 * scalex, 180 * scaley,   40 * scalex,     40 * scaley); // ROLLTOGGLE
     distSlider.setBounds        (  130 * scalex, 180 * scaley,   40 * scalex,     40 * scaley); // DISTTOGGLE
     yawSlider.setBounds         (  48  * scalex, 240 * scaley,  200 * scalex,     16 * scaley);
     pitchSlider.setBounds       (  255 * scalex, 165 * scaley,   20 * scalex,     91 * scaley);
 
-//  rollSliderLabel.setBounds   (141.5 * scalex, 165 * scaley, 16.9 * scalex,      9 * scaley); // ROLLTOGGLE
+  rollSliderLabel.setBounds   (141.5 * scalex, 165 * scaley, 16.9 * scalex,      9 * scaley); // ROLLTOGGLE
     distSliderLabel.setBounds   (141.5 * scalex, 165 * scaley, 16.9 * scalex,      9 * scaley); // DISTTOGGLE
     yawSliderLabel.setBounds    (141.5 * scalex, 260 * scaley,   22 * scalex,      9 * scaley);
     pitchSliderLabel.setBounds  (  252 * scalex, 148 * scaley,   26 * scalex,   11.4 * scaley);
@@ -341,9 +341,9 @@ void AuralizerAudioProcessorEditor::sliderValueChanged(Slider* slider){
     else if (slider == &pitchSlider){
         processor.setSliderValue("pitchSlider", pitchSlider.getValue());
     }
-//    else if (slider == &rollSlider){ // ROLLTOGGLE
-//        processor.setSliderValue("rollSlider", rollSlider.getValue()); // ROLLTOGGLE
-//    } // ROLLTOGGLE
+    else if (slider == &rollSlider){ // ROLLTOGGLE
+        processor.setSliderValue("rollSlider", rollSlider.getValue()); // ROLLTOGGLE
+    } // ROLLTOGGLE
     else if (slider == &distSlider){ // DISTTOGGLE
         processor.setSliderValue("distSlider", distSlider.getValue()); // DISTTOGGLE
     } // DISTTOGGLE

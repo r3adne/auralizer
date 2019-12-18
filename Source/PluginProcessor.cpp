@@ -17,6 +17,12 @@
 
 AuralizerAudioProcessor::~AuralizerAudioProcessor()
 {
+    // lock processing during destruction
+    processlock = true;
+
+    mono_block.clear();
+    Ambi_block.clear();
+    ambi_buffer.Reset();
     
 }
 
@@ -85,9 +91,6 @@ void AuralizerAudioProcessor::changeProgramName (int index, const String& newNam
 //==============================================================================
 void AuralizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
-
     _block_size = samplesPerBlock;
     _sample_rate = sampleRate;
 
@@ -97,7 +100,6 @@ void AuralizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 //    convBlock_ptr = Current_conv_block.getReadPointer(0);
 //    memset(&Current_conv_block, 0.0f, 2048);
 //    memset(&Current_mono_block, 0.0f, 2048);
-
 
     Encoder.Configure(AMBISONIC_ORDER_NUMBER, true, 0);
     Decoder.Configure(AMBISONIC_ORDER_NUMBER, true, kAmblib_Stereo);
@@ -109,21 +111,34 @@ void AuralizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     position.fElevation = *pitchAmt;
 
 
-    //    Processor.Configure(AMBISONIC_ORDER_NUMBER, true, _block_size, 0);
+    Processor.Configure(AMBISONIC_ORDER_NUMBER, true, _block_size, 0);
 
     ambi_buffer.Configure(AMBISONIC_ORDER_NUMBER, true, _block_size);
 
     
 }
 
+
+
 void AuralizerAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 
+    // lock processing during release...
+    processlock = true;
+
+    // when playback stops, set all buffer values to zero (other than IR buffers)
+    ambi_buffer.Reset();
+    Ambi_block.clear();
+    mono_block.clear();
+
+    // set float* style buffers to 0
+    memset(Current_conv_block, 0.0f, MAX_BUFFER_LENGTH * sizeof(float));
+    memset(Processed_conv_block, 0.0f, MAX_BUFFER_LENGTH * sizeof(float));
+    memset(Current_mono_block, 0.0f, MAX_BUFFER_LENGTH * sizeof(float));
 
 
-    // TODO: Release buffers
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -170,6 +185,7 @@ void AuralizerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         // note: mono_block also functions as the dry buffer, but it cannot in the evenutal stereo-stereo version.
         Encoder.Process(Current_mono_block, blocksize, &ambi_buffer); //
 
+        Processor.Process(&ambi_buffer, blocksize);
         // a loop through each channel of the ambisonic buffer
         for (int current_ambi_channel = 0; current_ambi_channel < getOrder[AMBISONIC_ORDER_NUMBER]; current_ambi_channel++){
 
@@ -282,7 +298,7 @@ void AuralizerAudioProcessor::setStateInformation (const void* data, int sizeInB
 
             *yawAmt = (float) xmlState->getDoubleAttribute("yawAmt");
             *pitchAmt = (float) xmlState->getDoubleAttribute("pitchAmt");
-//            *rollAmt = (float) xmlState->getDoubleAttribute("rollAmt"); // ROLLTOGGLE
+            *rollAmt = (float) xmlState->getDoubleAttribute("rollAmt"); // ROLLTOGGLE
             *distAmt = (float) xmlState->getDoubleAttribute("distAmt"); // DISTTOGGLE
 
             *dirAmt = (float) xmlState->getDoubleAttribute("dirAmt");
@@ -333,7 +349,7 @@ bool AuralizerAudioProcessor::loadPreset()
 
             *yawAmt = (float) xmlState->getDoubleAttribute("yawAmt");
             *pitchAmt = (float) xmlState->getDoubleAttribute("pitchAmt");
-//            *rollAmt = (float) xmlState->getDoubleAttribute("rollAmt"); // ROLLTOGGLE
+            *rollAmt = (float) xmlState->getDoubleAttribute("rollAmt"); // ROLLTOGGLE
             *distAmt = (float) xmlState->getDoubleAttribute("distAmt"); // DISTTOGGLE
 
             *dirAmt = (float) xmlState->getDoubleAttribute("dirAmt");
@@ -431,7 +447,7 @@ void AuralizerAudioProcessor::updateIRs(){
         fullIR_ptr[i] = fullIR[i].getReadPointer(0);
 
         // this adds each buffer's 0th channel to the full ir's 0th channel with the correct gain
-        fullIR[i].addFromWithRamp (0, 0, earlyIR.getReadPointer(i, 0), ir_length, *earlyAmt, *earlyAmt);
+        fullIR[i].addFromWithRamp  (0, 0, earlyIR.getReadPointer(i, 0), ir_length, *earlyAmt, *earlyAmt);
         fullIR[i].addFromWithRamp  (0, 0, lateIR.getReadPointer(i, 0),  ir_length, *lateAmt,  *lateAmt);
         fullIR[i].addFromWithRamp  (0, 0, dirIR.getReadPointer(i, 0),   ir_length, *dirAmt,   *dirAmt);
 
@@ -461,11 +477,12 @@ void AuralizerAudioProcessor::setSliderValue(String name, float value){
     else if (name == "pitchSlider"){
         *pitchAmt = value;
     }
-//    else if (name == "rollSlider"){ // ROLLTOGGLE
-//        *rollAmt = value; // ROLLTOGGLE
-//    } // ROLLTOGGLE
+    else if (name == "rollSlider"){ // ROLLTOGGLE
+        *rollAmt = value; // ROLLTOGGLE
+    } // ROLLTOGGLE
     else if (name == "distSlider"){ // DISTTOGGLE
         *distAmt = value; // DISTTOGGLE
+
     } // DISTTOGGLE
     else if (name == "directSlider"){
         *dirAmt = value;
@@ -486,7 +503,10 @@ void AuralizerAudioProcessor::setSliderValue(String name, float value){
     }
     if (name == "yawSlider" || name == "pitchSlider" || name == "rollSlider" || name == "distSlider"){
         Encoder.Refresh();
+        Processor.Refresh();
         Decoder.Refresh();
+        Encoder.SetPosition(position);
+//        Processor.SetOrientation(orientation);
     }
 
 }

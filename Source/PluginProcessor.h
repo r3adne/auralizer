@@ -8,8 +8,14 @@
 #include <boost/filesystem.hpp>
 //#include <filesystem>
 
-#define AMBISONIC_ORDER_NUMBER 2
 
+//#define MONO_TO_MONO
+//#define MONO_TO_STEREO
+//#define STEREO_TO_STEREO
+
+
+#define AMBISONIC_ORDER_NUMBER 2
+#define MAX_BUFFER_LENGTH 4096  // this is the maximum length of the i/o buffers (and therefore the processing buffers). Most platforms don't run past 4096.
 #define CONV_BLOCK_SIZE 512
 
 
@@ -32,7 +38,7 @@ public:
 
         addParameter (yawAmt = new AudioParameterFloat("yawAmt", "Yaw", -180.0f, 180.0f, 0.0f));
         addParameter (pitchAmt = new AudioParameterFloat("pitchAmt", "Pitch", -180.0f, 180.0f, 0.0f));
-//        addParameter (rollAmt = new AudioParameterFloat("rollAmt", "Roll", -180.0f, 180.0f, 0.0f)); // ROLLTOGGLE
+        addParameter (rollAmt = new AudioParameterFloat("rollAmt", "Roll", -180.0f, 180.0f, 0.0f)); // ROLLTOGGLE
         addParameter (distAmt = new AudioParameterFloat("distanceAmt", "Distance", 0.1f, 100.0f, 5.0f)); // DISTTOGGLE
 
         addParameter (dirAmt = new AudioParameterFloat("dirAmt", "Direct Level", 0.0f, 2.0f, 1.0f));
@@ -41,13 +47,16 @@ public:
 
         formatManager.registerBasicFormats();
 
-        Current_mono_block   =  (float *) malloc(2048*sizeof(float));
-        Processed_conv_block =  (float *) malloc(2048*sizeof(float));
-        Current_conv_block   =  (float *) malloc(2048*sizeof(float));
+        Current_mono_block   =  (float *) malloc(MAX_BUFFER_LENGTH * sizeof(float));
+        Processed_conv_block =  (float *) malloc(MAX_BUFFER_LENGTH * sizeof(float));
+        Current_conv_block   =  (float *) malloc(MAX_BUFFER_LENGTH * sizeof(float));
 
+//        orientation = {;
 //        for (int i = 0; i < getOrder[AMBISONIC_ORDER_NUMBER]; i++){
 //            Convolvers[i] = fftconvolver::FFTConvolver();
 //        }
+
+//        orientation = Orientation(*yawAmt, *pitchAmt, *rollAmt); // yaw, pitch, roll
 
         processlock = true;
 
@@ -88,8 +97,6 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     bool loadPreset();
-    
-
 
     void setSliderValue(String name, float Value);
     void setNewPresetName(String name){
@@ -125,12 +132,13 @@ private:
     // ambisonic processors
     CAmbisonicEncoder Encoder;
     CAmbisonicDecoder Decoder;
-//    CAmbisonicProcessor Processor;
+    CAmbisonicProcessor Processor;
 
     PolarPoint position;
+//    Orientation orientation;
 
 
-    juce::dsp::ProcessorChain<juce::dsp::Convolution> convolutionEngine;
+//    juce::dsp::ProcessorChain<juce::dsp::Convolution> convolutionEngine;
     // add processorDuplicator for convolution
     
 
@@ -172,7 +180,7 @@ private:
 
     AudioParameterFloat* yawAmt;
     AudioParameterFloat* pitchAmt;
-//    AudioParameterFloat* rollAmt; // ROLLTOGGLE
+    AudioParameterFloat* rollAmt; // ROLLTOGGLE
     AudioParameterFloat* distAmt; // DISTTOGGLE
 
     AudioParameterFloat* dirAmt;
