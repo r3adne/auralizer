@@ -52,187 +52,71 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
  Label lateSliderLabel;
  */
 
+    for (int i = 0; i < NUM_SLIDERS; i++){
+        Sliders[i]->setColour(Slider::trackColourId, Colours::white);
+        Sliders[i]->setSliderStyle(Slider::LinearBar);
+        Sliders[i]->setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+        Sliders[i]->setPopupMenuEnabled(false);
+        Sliders[i]->setRange(0.0f, 2.0f, 0.01f);
+        Sliders[i]->setValue(1.0f, dontSendNotification);
+
+        Labels[i]->attachToComponent(Sliders[i], false);
+
+
+        addAndMakeVisible(Sliders[i]);
+        addAndMakeVisible(Labels[i]);
+
+        Sliders[i]->addListener(this);
+    }
+
+
+    //////////// SLIDER PARAMETER OVERRIDES ////////////
+
     // wetSlider
-    wetSlider.setSliderStyle(Slider::LinearBar);
-    wetSlider.setRange(0.0f, 2.0f, 0.01f);
-    wetSlider.setValue(1.0f);
-
-    wetSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
-//    wetSlider.setColour(Slider::backgroundColourId, Colours::darkgrey);
-    wetSlider.setColour(Slider::trackColourId, Colours::darkgrey);
-
-    wetSlider.setPopupMenuEnabled(false);
-
-    addAndMakeVisible(wetSlider);
-
-
-
-
-    wetSliderLabel.attachToComponent(&wetSlider, false);
-    addAndMakeVisible(wetSliderLabel);
     wetSliderLabel.setText("wet", dontSendNotification);
 
-    wetSlider.addListener(this);
-
-    // drySlider;
-    drySlider.setSliderStyle(Slider::LinearBar);
-    drySlider.setRange(0.0f, 2.0f, 0.01f);
-    drySlider.setValue(1.0f);
-
-    drySlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
-    drySlider.setColour(Slider::trackColourId, Colours::darkgrey);
-    drySlider.setPopupMenuEnabled(false);
-    addAndMakeVisible(drySlider);
-
-    drySliderLabel.attachToComponent(&drySlider, false);
-    addAndMakeVisible(drySliderLabel);
+    // drySlider
     drySliderLabel.setText("dry", dontSendNotification);
 
-    drySlider.addListener(this);
-
-    // inSlider;
+    // inSlider
     inSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-    inSlider.setRange(0.0f, 2.0f, 0.01f);
-    inSlider.setValue(1.0f);
-
-    inSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
-    inSlider.setColour(Slider::trackColourId, Colours::darkgrey);
-    inSlider.setPopupMenuEnabled(false);
-    addAndMakeVisible(inSlider);
-
-    inSliderLabel.attachToComponent(&inSlider, false);
-    addAndMakeVisible(inSliderLabel);
     inSliderLabel.setText("input", dontSendNotification);
 
-    inSlider.addListener(this);
-
-    // outSlider;
+    // outSlider
     outSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-    outSlider.setRange(0.0f, 2.0f, 0.01f);
-    outSlider.setValue(1.0f);
-
-    outSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
-    outSlider.setColour(Slider::trackColourId, Colours::darkgrey);
-    outSlider.setPopupMenuEnabled(false);
-    addAndMakeVisible(outSlider);
-
-//    outSliderLabel.attachToComponent(&outSlider, false);
-    addAndMakeVisible(outSliderLabel);
     outSliderLabel.setText("output", dontSendNotification);
 
-    outSlider.addListener(this);
-
-    // yawSlider;
-    yawSlider.setSliderStyle(Slider::LinearBar);
+    // yawSlider
     yawSlider.setRange(-180.0f, 180.0f, 0.1f);
-    yawSlider.setValue(0.0f);
-
-    yawSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
-    yawSlider.setColour(Slider::trackColourId, Colours::darkgrey);
-    yawSlider.setPopupMenuEnabled(false);
-    addAndMakeVisible(yawSlider);
-
-//    yawSliderLabel.attachToComponent(&yawSlider, false);
-    addAndMakeVisible(yawSliderLabel);
+    yawSlider.setValue(0.0f, dontSendNotification);
     yawSliderLabel.setText("yaw", dontSendNotification);
 
-    yawSlider.addListener(this);
-
-    // pitchSlider;
+    // pitchSlider
     pitchSlider.setSliderStyle(Slider::LinearBarVertical);
-    pitchSlider.setRange(0.0f, 2.0f, 0.01f);
-    pitchSlider.setValue(1.0f);
-
-    pitchSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
-    pitchSlider.setColour(Slider::trackColourId, Colours::darkgrey);
-    pitchSlider.setPopupMenuEnabled(false);
-    addAndMakeVisible(pitchSlider);
-
-    pitchSliderLabel.attachToComponent(&pitchSlider, true);
-    addAndMakeVisible(pitchSliderLabel);
     pitchSliderLabel.setText("pitch", dontSendNotification);
 
-    pitchSlider.addListener(this);
-
     // rollSlider
-    rollSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag); // ROLLTOGGLE
-    rollSlider.setRange(0.0f, 2.0f, 0.01f); // ROLLTOGGLE
-    rollSlider.setValue(1.0f); // ROLLTOGGLE
-//
-    rollSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0); // ROLLTOGGLE
-    rollSlider.setColour(Slider::trackColourId, Colours::darkgrey); // ROLLTOGGLE
-    rollSlider.setPopupMenuEnabled(false); // ROLLTOGGLE
-    addAndMakeVisible(rollSlider); // ROLLTOGGLE
-//
-    rollSliderLabel.attachToComponent(&rollSlider, false); // ROLLTOGGLE
-    addAndMakeVisible(rollSliderLabel); // ROLLTOGGLE
-    rollSliderLabel.setText("roll", dontSendNotification); // ROLLTOGGLE
-//
-    rollSlider.addListener(this); // ROLLTOGGLE
+    rollSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    rollSliderLabel.setText("roll", dontSendNotification);
 
-    distSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag); // DISTTOGGLE
-    distSlider.setRange(0.0f, 2.0f, 0.01f); // DISTTOGGLE
-    distSlider.setValue(1.0f); // DISTTOGGLE
-
-    distSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0); // DISTTOGGLE
-    distSlider.setColour(Slider::trackColourId, Colours::darkgrey); // DISTTOGGLE
-    distSlider.setPopupMenuEnabled(false); // DISTTOGGLE
-//    addAndMakeVisible(distSlider); // DISTTOGGLE
-
-    distSliderLabel.attachToComponent(&distSlider, false); // DISTTOGGLE
-    addAndMakeVisible(distSliderLabel); // DISTTOGGLE
-    distSliderLabel.setText("distance", dontSendNotification); // DISTTOGGLE
-
-    distSlider.addListener(this); // DISTTOGGLE
-
+    // distSlider
+    distSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    distSlider.setRange(0.0f, 50.0f, 0.01f);
+    distSliderLabel.setText("distance", dontSendNotification);
 
     // directSlider;
     directSlider.setSliderStyle(Slider::LinearBar);
-    directSlider.setRange(0.0f, 2.0f, 0.01f);
-    directSlider.setValue(1.0f, dontSendNotification);
-
-    directSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
-    directSlider.setColour(Slider::trackColourId, Colours::darkgrey);
-    directSlider.setPopupMenuEnabled(false);
-    addAndMakeVisible(directSlider);
-
-    directSliderLabel.attachToComponent(&directSlider, false);
-    addAndMakeVisible(directSliderLabel);
     directSliderLabel.setText("direct", dontSendNotification);
-
-    directSlider.addListener(this);
 
     // earlySlider;
     earlySlider.setSliderStyle(Slider::LinearBar);
-    earlySlider.setRange(0.0f, 2.0f, 0.01f);
-    earlySlider.setValue(1.0f, dontSendNotification);
-
-    earlySlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
-    earlySlider.setColour(Slider::trackColourId, Colours::darkgrey);
-    earlySlider.setPopupMenuEnabled(false);
-    addAndMakeVisible(earlySlider);
-
-    earlySliderLabel.attachToComponent(&earlySlider, false);
-    addAndMakeVisible(earlySliderLabel);
     earlySliderLabel.setText("early", dontSendNotification);
 
-    earlySlider.addListener(this);
-
     // lateSlider;
-    lateSlider.setSliderStyle(Slider::LinearBar);
-    lateSlider.setRange(0.0f, 2.0f, 0.01f);
-    lateSlider.setValue(1.0f, dontSendNotification);
-
-    lateSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
-    lateSlider.setColour(Slider::trackColourId, Colours::darkgrey);
-    lateSlider.setPopupMenuEnabled(false);
-    addAndMakeVisible(lateSlider);
-
-    lateSliderLabel.attachToComponent(&lateSlider, false);
-    addAndMakeVisible(lateSliderLabel);
     lateSliderLabel.setText("late", dontSendNotification);
 
-    lateSlider.addListener(this);
+
+    ////////////    ////////////
 
     PresetButton.setButtonText("Preset");
     addAndMakeVisible(PresetButton);

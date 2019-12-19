@@ -13,6 +13,12 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 
+#define NUM_SLIDERS 11
+#define NUM_LABELS 11
+
+//typedef struct UIItemPointerArray{
+//    int numItems;
+//} UIItemPointerArray;
 
 //==============================================================================
 /**
@@ -59,6 +65,9 @@ private:
     Slider earlySlider;
     Slider lateSlider;
 
+    Slider* Sliders[NUM_SLIDERS] = {&wetSlider, &drySlider, &inSlider, &outSlider,
+                            &yawSlider, &pitchSlider, &rollSlider, &distSlider,
+                            &directSlider, &earlySlider, &lateSlider};
     // Labels
     Label wetSliderLabel;
     Label drySliderLabel;
@@ -75,6 +84,11 @@ private:
     Label directSliderLabel;
     Label earlySliderLabel;
     Label lateSliderLabel;
+
+    Label* Labels[NUM_LABELS] = {&wetSliderLabel, &drySliderLabel, &inSliderLabel,
+                         &outSliderLabel, &yawSliderLabel, &pitchSliderLabel,
+                         &rollSliderLabel, &distSliderLabel, &directSliderLabel,
+                         &earlySliderLabel, &lateSliderLabel};
 
 //    ComboBox PresetsBox;
     TextButton PresetButton;

@@ -462,9 +462,9 @@ void AuralizerAudioProcessor::modifyIRs(AudioBuffer<float> *IR_changed, float ne
     int j = 0;
 
     for (i = 0; i < getOrder[AMBISONIC_ORDER_NUMBER]; i++){
-            for (j = 0; j < length; j++){
-                fullIR[i].setSample(0, j, fullIR[i].getSample(0, j) + (IR_changed->getSample(i, j) * (new_value - previous_value)));
-            }
+        for (j = 0; j < length; j++){
+            fullIR[i].setSample(0, j, fullIR[i].getSample(0, j) + (IR_changed->getSample(i, j) * (new_value - previous_value)));
+        }
     }
 }
 
