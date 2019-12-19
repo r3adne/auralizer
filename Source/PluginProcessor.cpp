@@ -248,24 +248,8 @@ void AuralizerAudioProcessor::getStateInformation (MemoryBlock& destData)
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
     processlock = true;
-    std::unique_ptr<XmlElement> xml (new XmlElement ("auralizerParam_0"));
-    xml->setAttribute("name", new_preset_name);
-    xml->setAttribute("IRDir", IR_directory);
-
-    xml->setAttribute("wetAmt", (double) *wetAmt);
-    xml->setAttribute("dryAmt", (double) *dryAmt);
-
-    xml->setAttribute("inAmt", (double) *inAmt);
-    xml->setAttribute("outAmt", (double) *outAmt);
-
-    xml->setAttribute("yawAmt", (double) *yawAmt);
-    xml->setAttribute("pitchAmt", (double) *pitchAmt);
-//    xml->setAttribute("rollAmt", (double) *rollAmt);
-    xml->setAttribute("distAmt", (double) *distAmt);
-
-    xml->setAttribute("dirAmt", (double) *dirAmt);
-    xml->setAttribute("earlyAmt", (double) *earlyAmt);
-    xml->setAttribute("lateAmt", (double) *lateAmt);
+    auto state = parameters.copyState();
+    std::unique_ptr<XmlElement> xml (state.createXml());
     copyXmlToBinary(*xml, destData);
     processlock = false;
 
@@ -280,15 +264,6 @@ void AuralizerAudioProcessor::setStateInformation (const void* data, int sizeInB
     if (xmlState.get() != nullptr){
         if (xmlState->hasTagName("auralizerParam_0")){
             new_preset_name = "default_presetSaveName";
-//            new_preset_name = xmlState->getStringAttribute("name");
-//
-//            if (IR_directory == ""){
-//                IR_directory = "~/Documents/auralizer/presets/";
-//            }
-//            else{
-//                IR_directory = xmlState->getStringAttribute("IRDir"); // IRDir must be a valid path.
-//            }
-
             IR_directory = "~/Documents/auralizer/presets/";
             *wetAmt = (float) xmlState->getDoubleAttribute("wetAmt");
             *dryAmt = (float) xmlState->getDoubleAttribute("dryAmt");
@@ -306,19 +281,13 @@ void AuralizerAudioProcessor::setStateInformation (const void* data, int sizeInB
             *lateAmt = (float) xmlState->getDoubleAttribute("lateAmt");
 
             boost::filesystem::path IRDirPath(IR_directory.getCharPointer());
-//
-//            if (! exists(IRDirPath)){ // if IRDirPath is an invalid path, we'll throw.
-//                assert(0); // yikes
-//            }
-//            else if (! is_directory(IRDirPath)){
-//                assert(!1); // oof
-//            }
 
             loadIRs(IRDirPath);
             processlock = false;
-            
         }
-
+        else if (xmlState->hasTagName(parameters.state.getType())){
+            parameters.replaceState (ValueTree::fromXml (*xmlState));
+        }
     }
 }
 

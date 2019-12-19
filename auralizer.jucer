@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="Uonl3S" name="auralizer" projectType="audioplug" jucerVersion="5.4.4"
-              version="0.01" cppLanguageStandard="17">
+<JUCERPROJECT id="Uonl3S" name="auralizer" projectType="audioplug" jucerVersion="5.4.3"
+              version="0.01" cppLanguageStandard="14">
   <MAINGROUP id="ErdQTp" name="auralizer">
     <GROUP id="{72388854-B9A0-C410-E44B-53CD04B91E66}" name="FFTConvolver">
       <GROUP id="{F72AB4DD-EAD2-78F2-F4AB-6B12F02A7145}" name="test">

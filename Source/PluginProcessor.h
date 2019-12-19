@@ -28,28 +28,41 @@ class AuralizerAudioProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
-    AuralizerAudioProcessor()
+    AuralizerAudioProcessor() : parameters(*this, nullptr, Identifier("Auralizer"),
+                                           {
+                                               std::make_unique<AudioParameterFloat>("wetAmt", "Wet", 0.0f, 2.0f, 1.0f),
+                                               std::make_unique<AudioParameterFloat>("dryAmt", "Dry", 0.0f, 2.0f, 1.0f),
+                                               std::make_unique<AudioParameterFloat>("inAmt", "Input", 0.0f, 2.0f, 1.0f),
+                                               std::make_unique<AudioParameterFloat>("outAmt", "Output", 0.0f, 2.0f, 1.0f),
+                                               std::make_unique<AudioParameterFloat>("yawAmt", "Yaw", -180.0f, 180.0f, 0.0f),
+                                               std::make_unique<AudioParameterFloat>("pitchAmt", "Pitch", -180.0f, 180.0f, 0.0f),
+                                               std::make_unique<AudioParameterFloat>("rollAmt", "Roll", -180.0f, 180.0f, 0.0f),
+                                               std::make_unique<AudioParameterFloat>("distAmt", "Distance", 0.1f, 100.0f, 5.0f),
+                                               std::make_unique<AudioParameterFloat>("dirAmt", "Direct Level", 0.0f, 2.0f, 1.0f),
+                                               std::make_unique<AudioParameterFloat>("earlyAmt", "Early Level", 0.0f, 2.0f, 1.0f),
+                                               std::make_unique<AudioParameterFloat>("lateAmt", "Late Level", 0.0f, 2.0f, 1.0f)
+                                           })
     {
-        addParameter (wetAmt = new AudioParameterFloat("wetAmt", "Wet", 0.0f, 2.0f, 1.0f));
-        addParameter (dryAmt = new AudioParameterFloat("dryAmt", "Dry", 0.0f, 2.0f, 1.0f));
-
-        addParameter (inAmt = new AudioParameterFloat("inAmt", "Input", 0.0f, 2.0f, 1.0f));
-        addParameter (outAmt = new AudioParameterFloat("outAmt", "Output", 0.0f, 2.0f, 1.0f));
-
-        addParameter (yawAmt = new AudioParameterFloat("yawAmt", "Yaw", -180.0f, 180.0f, 0.0f));
-        addParameter (pitchAmt = new AudioParameterFloat("pitchAmt", "Pitch", -180.0f, 180.0f, 0.0f));
-        addParameter (rollAmt = new AudioParameterFloat("rollAmt", "Roll", -180.0f, 180.0f, 0.0f)); // ROLLTOGGLE
-        addParameter (distAmt = new AudioParameterFloat("distanceAmt", "Distance", 0.1f, 100.0f, 5.0f)); // DISTTOGGLE
-
-        addParameter (dirAmt = new AudioParameterFloat("dirAmt", "Direct Level", 0.0f, 2.0f, 1.0f));
-        addParameter (earlyAmt = new AudioParameterFloat("earlyAmt", "Early Level", 0.0f, 2.0f, 1.0f));
-        addParameter (lateAmt = new AudioParameterFloat("lateAmt", "Late Level", 0.0f, 2.0f, 1.0f));
 
         formatManager.registerBasicFormats();
 
         Current_mono_block   =  (float *) malloc(MAX_BUFFER_LENGTH * sizeof(float));
         Processed_conv_block =  (float *) malloc(MAX_BUFFER_LENGTH * sizeof(float));
         Current_conv_block   =  (float *) malloc(MAX_BUFFER_LENGTH * sizeof(float));
+
+
+        wetAmt      =   parameters.getRawParameterValue("wetAmt");
+        dryAmt      =   parameters.getRawParameterValue("dryAmt");
+        inAmt       =   parameters.getRawParameterValue("inAmt");
+        outAmt      =   parameters.getRawParameterValue("outAmt");
+        yawAmt      =   parameters.getRawParameterValue("yawAmt");
+        pitchAmt    =   parameters.getRawParameterValue("pitchAmt");
+        rollAmt     =   parameters.getRawParameterValue("rollAmt");
+        distAmt     =   parameters.getRawParameterValue("distAmt");
+        dirAmt      =   parameters.getRawParameterValue("dirAmt");
+        earlyAmt    =   parameters.getRawParameterValue("earlyAmt");
+        lateAmt     =   parameters.getRawParameterValue("lateAmt");
+
 
 //        orientation = {;
 //        for (int i = 0; i < getOrder[AMBISONIC_ORDER_NUMBER]; i++){
@@ -114,6 +127,8 @@ public:
     float* Current_conv_block;
     float* Processed_conv_block;
 private:
+    AudioProcessorValueTreeState parameters;
+
 
     void loadIRs(boost::filesystem::path IRDirPath);
     void updateIRs();
@@ -177,22 +192,42 @@ private:
     bool ConvolverActive[getOrder[AMBISONIC_ORDER_NUMBER]];
 
     // params
-    AudioParameterFloat* wetAmt;
-    AudioParameterFloat* dryAmt;
 
-    AudioParameterFloat* inAmt;
-    AudioParameterFloat* outAmt;
+    // there's a world in which we're using atomic for this, and it might come soon. But honeslty,
+    //I'm not sure it's necessary. I need to look into it more, but only one thread writes to these,
+    // and it would be difficult for this to cause an actual problem. Currently, this won't work as
+    // std::atomic<float>* cannot be assigned to float*
+    // Maybe this will work better with std::atomic_ref in c++20.
 
-    AudioParameterFloat* yawAmt;
-    AudioParameterFloat* pitchAmt;
-    AudioParameterFloat* rollAmt; // ROLLTOGGLE
-    AudioParameterFloat* distAmt; // DISTTOGGLE
+//    std::atomic<float>* wetAmt = nullptr;
+//    std::atomic<float>* dryAmt = nullptr;
+//
+//    std::atomic<float>* inAmt  = nullptr;
+//    std::atomic<float>* outAmt = nullptr;
+//
+//    std::atomic<float>* yawAmt   = nullptr;
+//    std::atomic<float>* pitchAmt = nullptr;
+//    std::atomic<float>* rollAmt  = nullptr; // ROLLTOGGLE
+//    std::atomic<float>* distAmt = nullptr; // DISTTOGGLE
+//
+//    std::atomic<float>* dirAmt = nullptr;
+//    std::atomic<float>* earlyAmt = nullptr;
+//    std::atomic<float>* lateAmt = nullptr;
 
-    AudioParameterFloat* dirAmt;
-    AudioParameterFloat* earlyAmt;
-    AudioParameterFloat* lateAmt;
+    float* wetAmt = nullptr;
+    float* dryAmt = nullptr;
+    float* inAmt = nullptr;
+    float* outAmt = nullptr;
+    float* yawAmt = nullptr;
+    float* pitchAmt = nullptr;
+    float* rollAmt = nullptr;
+    float* distAmt = nullptr;
+    float* dirAmt = nullptr;
+    float* earlyAmt = nullptr;
+    float* lateAmt = nullptr;
 
-    fftconvolver::FFTConvolver Convolvers[getOrder[AMBISONIC_ORDER_NUMBER]]; // 9-item array of (formerly pointers to) FFTConvolver objects gives us a pretty smooth way to work with up to 3nd order signals
+    // maybe make this std::array<FFTConvolver> ?
+    fftconvolver::FFTConvolver Convolvers[getOrder[AMBISONIC_ORDER_NUMBER]];
 
     
 
