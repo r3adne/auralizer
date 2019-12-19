@@ -53,7 +53,10 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
  */
 
     for (int i = 0; i < NUM_SLIDERS; i++){
-        Sliders[i]->setColour(Slider::trackColourId, Colours::white);
+        Sliders[i]->setColour(Slider::trackColourId, Colours::darkgrey);
+        Sliders[i]->setColour(Slider::rotarySliderOutlineColourId, Colours::white);
+        Sliders[i]->setColour(Slider::rotarySliderFillColourId, Colours::darkgrey);
+        Sliders[i]->setColour(Slider::thumbColourId, Colours::white);
         Sliders[i]->setSliderStyle(Slider::LinearBar);
         Sliders[i]->setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
         Sliders[i]->setPopupMenuEnabled(false);
