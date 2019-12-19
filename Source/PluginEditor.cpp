@@ -177,7 +177,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     distSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0); // DISTTOGGLE
     distSlider.setColour(Slider::trackColourId, Colours::darkgrey); // DISTTOGGLE
     distSlider.setPopupMenuEnabled(false); // DISTTOGGLE
-    addAndMakeVisible(distSlider); // DISTTOGGLE
+//    addAndMakeVisible(distSlider); // DISTTOGGLE
 
     distSliderLabel.attachToComponent(&distSlider, false); // DISTTOGGLE
     addAndMakeVisible(distSliderLabel); // DISTTOGGLE

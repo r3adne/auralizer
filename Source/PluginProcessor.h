@@ -117,6 +117,8 @@ private:
 
     void loadIRs(boost::filesystem::path IRDirPath);
     void updateIRs();
+    void modifyIRs(AudioBuffer<float> *IR_changed, float new_value,
+                                            float previous_value, unsigned long length);
 
     // buffers
     CBFormat ambi_buffer;
@@ -131,8 +133,10 @@ private:
 
     // ambisonic processors
     CAmbisonicEncoder Encoder;
+//    CAmbisonicEncoderDist EncoderDist;
     CAmbisonicDecoder Decoder;
     CAmbisonicProcessor Processor;
+//    CAmbisonicZoomer Zoomer;
 
     PolarPoint position;
 //    Orientation orientation;
@@ -169,6 +173,7 @@ private:
 
     unsigned int ir_length = 10000;
     bool processlock = true;
+    float previousValue = 1.0f;
     bool ConvolverActive[getOrder[AMBISONIC_ORDER_NUMBER]];
 
     // params

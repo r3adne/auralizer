@@ -457,6 +457,17 @@ void AuralizerAudioProcessor::updateIRs(){
     processlock = false;
 }
 
+void AuralizerAudioProcessor::modifyIRs(AudioBuffer<float> *IR_changed, float new_value, float previous_value, unsigned long length){
+    int i = 0;
+    int j = 0;
+
+    for (i = 0; i < getOrder[AMBISONIC_ORDER_NUMBER]; i++){
+            for (j = 0; j < length; j++){
+                fullIR[i].setSample(0, j, fullIR[i].getSample(0, j) + (IR_changed->getSample(i, j) * (new_value - previous_value)));
+            }
+    }
+}
+
 
 void AuralizerAudioProcessor::setSliderValue(String name, float value){
     if (name == "wetSlider"){
@@ -485,13 +496,19 @@ void AuralizerAudioProcessor::setSliderValue(String name, float value){
 
     } // DISTTOGGLE
     else if (name == "directSlider"){
+        previousValue = *dirAmt;
         *dirAmt = value;
+        modifyIRs(&dirIR, value, previousValue, dirIR.getNumSamples());
     }
     else if (name == "earlySlider"){
+        previousValue = *earlyAmt;
         *earlyAmt = value;
+        modifyIRs(&earlyIR, value, previousValue, earlyIR.getNumSamples());
     }
     else if (name == "lateSlider"){
+        previousValue = *lateAmt;
         *lateAmt = value;
+        modifyIRs(&lateIR, value, previousValue, lateIR.getNumSamples());
     }
     else { // error
         throw std::invalid_argument("received invalid slider name argument");
@@ -499,10 +516,11 @@ void AuralizerAudioProcessor::setSliderValue(String name, float value){
 
     // if any of the sliders that change the actual IR are changed
     if (name == "earlySlider" || name == "lateSlider" || name == "directSlider"){
-        updateIRs();
+
     }
     if (name == "yawSlider" || name == "pitchSlider" || name == "rollSlider" || name == "distSlider"){
         Encoder.Refresh();
+        Processor.SetOrientation(Orientation(*yawAmt, *pitchAmt, *rollAmt));
         Processor.Refresh();
         Decoder.Refresh();
         Encoder.SetPosition(position);
