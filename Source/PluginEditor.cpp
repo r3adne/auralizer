@@ -234,7 +234,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 
     lateSlider.addListener(this);
 
-
+    PresetButton.setButtonText("Preset");
     addAndMakeVisible(PresetButton);
     PresetButton.onClick = [this]{ presetButtonClicked(); };
 
@@ -371,6 +371,7 @@ void AuralizerAudioProcessorEditor::presetButtonClicked(){
         else if (! presetFile.hasFileExtension(".xml")){
             throw std::invalid_argument("The chosen file does not have \".xml\" extension");
         }
+        PresetButton.setButtonText(presetFile.getFileNameWithoutExtension());
         processor.setXmlFileToLoad(presetFile);
         processor.loadPreset();
     }
