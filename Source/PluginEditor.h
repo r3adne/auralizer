@@ -7,7 +7,6 @@
 
   ==============================================================================
 */
-
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
@@ -16,18 +15,22 @@
 #define NUM_SLIDERS 11
 #define NUM_LABELS 11
 
-//typedef struct UIItemPointerArray{
-//    int numItems;
-//} UIItemPointerArray;
+
+
+typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
+typedef AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
+
+
 
 //==============================================================================
 /**
 */
+
 class AuralizerAudioProcessorEditor  :  public AudioProcessorEditor,
                                         private Slider::Listener
 {
 public:
-    AuralizerAudioProcessorEditor (AuralizerAudioProcessor&);
+    AuralizerAudioProcessorEditor (AuralizerAudioProcessor& p, AudioProcessorValueTreeState& vts);
     ~AuralizerAudioProcessorEditor();
 
     //==============================================================================
@@ -47,6 +50,11 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     AuralizerAudioProcessor& processor;
+    AudioProcessorValueTreeState& valueTreeState;
+
+
+
+
 
 
     // Sliders
@@ -65,9 +73,21 @@ private:
     Slider earlySlider;
     Slider lateSlider;
 
+    String vstids[NUM_SLIDERS] = {"wetAmt", "dryAmt", "inAmt", "outAmt",
+                                "yawAmt", "pitchAmt", "rollAmt", "distAmt",
+                                "dirAmt", "earlyAmt", "lateAmt"};
+
+
+//    std::unique_ptr<SliderAttachment> wetAttachment, dryAttachment, inAttachment, outAttachment,
+//                                      yawAttachment, pitchAttachment, rollAttachment, distAttachment,
+//                                        directAttachment, earlyAttachment, lateAttachment;
+
     Slider* Sliders[NUM_SLIDERS] = {&wetSlider, &drySlider, &inSlider, &outSlider,
                             &yawSlider, &pitchSlider, &rollSlider, &distSlider,
                             &directSlider, &earlySlider, &lateSlider};
+
+    std::unique_ptr<SliderAttachment> SliderAttachments[NUM_SLIDERS];
+
     // Labels
     Label wetSliderLabel;
     Label drySliderLabel;
@@ -92,6 +112,8 @@ private:
 
 //    ComboBox PresetsBox;
     TextButton PresetButton;
+
+    std::unique_ptr<ButtonAttachment> presetAttachment;
 
 
 

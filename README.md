@@ -11,7 +11,8 @@ I'm also working on some algorithmic ambisonic reverbs, which could be a fun add
 
 ### To do:
 
-* Fix plugin parameter storing
+* Implement normalisableRanges to ensure that param values from Editor are reaching Processor correctly.
+* Fix plugin parameter storage
 * Make an init preset which is loaded automatically upon launch
 * Redo the processor so that it conditionally compiles into mono-mono, mono-stereo, stereo-stereo (eventually, we may do more than that because we hyphothetically can do basically anything with the HOA internally processed signal)
 * Make maybe 30-40 presets

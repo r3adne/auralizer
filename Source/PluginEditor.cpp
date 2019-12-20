@@ -12,8 +12,8 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProcessor& p, AudioProcessorValueTreeState& vts)
+: AudioProcessorEditor (&p), processor (p), valueTreeState (vts)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -60,11 +60,11 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
         Sliders[i]->setSliderStyle(Slider::LinearBar);
         Sliders[i]->setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
         Sliders[i]->setPopupMenuEnabled(false);
-        Sliders[i]->setRange(0.0f, 2.0f, 0.01f);
-        Sliders[i]->setValue(1.0f, dontSendNotification);
 
+        Sliders[i]->setValue(*valueTreeState.getRawParameterValue(vstids[i]), sendNotification);
         Labels[i]->attachToComponent(Sliders[i], false);
 
+        SliderAttachments[i].reset (new SliderAttachment(valueTreeState, Sliders[i]->getName(), *Sliders[i]));
 
         addAndMakeVisible(Sliders[i]);
         addAndMakeVisible(Labels[i]);
@@ -80,6 +80,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 
     // drySlider
     drySliderLabel.setText("dry", dontSendNotification);
+//    dryAttachment.reset (new SliderAttachment()
 
     // inSlider
     inSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
@@ -122,6 +123,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
     ////////////    ////////////
 
     PresetButton.setButtonText("Preset");
+    presetAttachment.reset (new ButtonAttachment(valueTreeState, "Preset", PresetButton));
     addAndMakeVisible(PresetButton);
     PresetButton.onClick = [this]{ presetButtonClicked(); };
 
@@ -173,6 +175,20 @@ void AuralizerAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 
+    wetSlider.setValue((double) processor.getSliderValue("wetSlider"));
+    drySlider.setValue((double) processor.getSliderValue("drySlider"));
+    inSlider.setValue((double) processor.getSliderValue("inSlider"));
+    outSlider.setValue((double) processor.getSliderValue("outSlider"));
+    rollSlider.setValue((double) processor.getSliderValue("rollSlider"));
+    distSlider.setValue((double) processor.getSliderValue("distSlider"));
+    pitchSlider.setValue((double) processor.getSliderValue("pitchSlider"));
+    yawSlider.setValue((double) processor.getSliderValue("yawSlider"));
+    directSlider.setValue((double) processor.getSliderValue("directSlider"));
+    earlySlider.setValue((double) processor.getSliderValue("earlySlider"));
+    lateSlider.setValue((double) processor.getSliderValue("lateSlider"));
+
+    wetSlider.valueChanged();
+
     // header
 //    PresetsBox.setBounds(<#int x#>, <#int y#>, <#int width#>, <#int height#>)
 //    PresetsBox.setBounds        (  187 * scalex,  15 * scaley,   93 * scalex,   17 * scaley);
@@ -190,8 +206,8 @@ void AuralizerAudioProcessorEditor::resized()
     inSlider.setBounds          (  235 * scalex, 75  * scaley,   30 * scalex,     30 * scaley);
     inSliderLabel.setBounds     (  225 * scalex, 45  * scaley,   47 * scalex,     19 * scaley);
     // rotate section
-  rollSlider.setBounds        (  130 * scalex, 180 * scaley,   40 * scalex,     40 * scaley); // ROLLTOGGLE
-    distSlider.setBounds        (  130 * scalex, 180 * scaley,   40 * scalex,     40 * scaley); // DISTTOGGLE
+  rollSlider.setBounds        (  110 * scalex, 180 * scaley,   40 * scalex,     40 * scaley); // ROLLTOGGLE
+    distSlider.setBounds        (  150 * scalex, 180 * scaley,   40 * scalex,     40 * scaley); // DISTTOGGLE
     yawSlider.setBounds         (  48  * scalex, 240 * scaley,  200 * scalex,     16 * scaley);
     pitchSlider.setBounds       (  255 * scalex, 165 * scaley,   20 * scalex,     91 * scaley);
 

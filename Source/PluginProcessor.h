@@ -19,6 +19,7 @@
 #define CONV_BLOCK_SIZE 512
 
 
+
 //==============================================================================
 /**
 */
@@ -29,19 +30,30 @@ class AuralizerAudioProcessor  : public AudioProcessor
 public:
     //==============================================================================
     AuralizerAudioProcessor() : parameters(*this, nullptr, Identifier("Auralizer"),
-                                           {
-                                               std::make_unique<AudioParameterFloat>("wetAmt", "Wet", 0.0f, 2.0f, 1.0f),
-                                               std::make_unique<AudioParameterFloat>("dryAmt", "Dry", 0.0f, 2.0f, 1.0f),
-                                               std::make_unique<AudioParameterFloat>("inAmt", "Input", 0.0f, 2.0f, 1.0f),
-                                               std::make_unique<AudioParameterFloat>("outAmt", "Output", 0.0f, 2.0f, 1.0f),
-                                               std::make_unique<AudioParameterFloat>("yawAmt", "Yaw", -180.0f, 180.0f, 0.0f),
-                                               std::make_unique<AudioParameterFloat>("pitchAmt", "Pitch", -180.0f, 180.0f, 0.0f),
-                                               std::make_unique<AudioParameterFloat>("rollAmt", "Roll", -180.0f, 180.0f, 0.0f),
-                                               std::make_unique<AudioParameterFloat>("distAmt", "Distance", 0.1f, 100.0f, 5.0f),
-                                               std::make_unique<AudioParameterFloat>("dirAmt", "Direct Level", 0.0f, 2.0f, 1.0f),
-                                               std::make_unique<AudioParameterFloat>("earlyAmt", "Early Level", 0.0f, 2.0f, 1.0f),
-                                               std::make_unique<AudioParameterFloat>("lateAmt", "Late Level", 0.0f, 2.0f, 1.0f)
-                                           })
+                                           { // we'll use NormalisableRange soon, but not now.
+//                       std::make_unique<AudioParameterFloat>("wetAmt", "Wet", NormalisableRange<float>(0.0f, 2.0f), 1.0f),
+//                       std::make_unique<AudioParameterFloat>("dryAmt", "Dry", NormalisableRange<float>(0.0f, 2.0f), 1.0f),
+//                       std::make_unique<AudioParameterFloat>("inAmt", "Input", NormalisableRange<float>(0.0f, 2.0f), 1.0f),
+//                       std::make_unique<AudioParameterFloat>("outAmt", "Output", NormalisableRange<float>(0.0f, 2.0f), 1.0f),
+//                       std::make_unique<AudioParameterFloat>("yawAmt", "Yaw", NormalisableRange<float>(-180.0f, 180.0f), 0.0f),
+//                       std::make_unique<AudioParameterFloat>("pitchAmt", "Pitch", NormalisableRange<float>(-90.0f, 90.0f), 0.0f),
+//                       std::make_unique<AudioParameterFloat>("rollAmt", "Roll", NormalisableRange<float>(-180.0f, 180.0f), 0.0f),
+//                       std::make_unique<AudioParameterFloat>("distAmt", "Distance", NormalisableRange<float>(0.0f, 50.0f), 5.0f),
+//                       std::make_unique<AudioParameterFloat>("dirAmt", "Direct Level", NormalisableRange<float>(0.0f, 2.0f), 1.0f),
+//                       std::make_unique<AudioParameterFloat>("earlyAmt", "Early Level", NormalisableRange<float>(0.0f, 2.0f), 1.0f),
+//                       std::make_unique<AudioParameterFloat>("lateAmt", "Late Level", NormalisableRange<float>(0.0f, 2.0f), 1.0f)
+                       std::make_unique<AudioParameterFloat>("wetAmt", "Wet", 0.0f, 2.0f, 1.0f),
+                       std::make_unique<AudioParameterFloat>("dryAmt", "Dry", 0.0f, 2.0f, 1.0f),
+                       std::make_unique<AudioParameterFloat>("inAmt", "Input", 0.0f, 2.0f, 1.0f),
+                       std::make_unique<AudioParameterFloat>("outAmt", "Output", 0.0f, 2.0f, 1.0f),
+                       std::make_unique<AudioParameterFloat>("yawAmt", "Yaw", -180.0f, 180.0f, 0.0f),
+                       std::make_unique<AudioParameterFloat>("pitchAmt", "Pitch", -90.0f, 90.0f, 0.0f),
+                       std::make_unique<AudioParameterFloat>("rollAmt", "Roll", -180.0f, 180.0f, 0.0f),
+                       std::make_unique<AudioParameterFloat>("distAmt", "Distance", 0.0f, 50.0f, 5.0f),
+                       std::make_unique<AudioParameterFloat>("dirAmt", "Direct Level", 0.0f, 2.0f, 1.0f),
+                       std::make_unique<AudioParameterFloat>("earlyAmt", "Early Level", 0.0f, 2.0f, 1.0f),
+                       std::make_unique<AudioParameterFloat>("lateAmt", "Late Level", 0.0f, 2.0f, 1.0f)
+                       })
     {
 
         formatManager.registerBasicFormats();
@@ -112,16 +124,10 @@ public:
     bool loadPreset();
 
     void setSliderValue(String name, float Value);
-    void setNewPresetName(String name){
-        new_preset_name = name;
-    };
-    void setPresetDirectory(String new_preset_directory){
-        preset_directory = new_preset_directory;
-    }
-
-    void setXmlFileToLoad(juce::File fileToLoad){
-        xmlFileToLoad = juce::File(fileToLoad);
-    }
+    float getSliderValue(String name);
+    void setNewPresetName(String name){ new_preset_name = name; };
+    void setPresetDirectory(String new_preset_directory){ preset_directory = new_preset_directory; }
+    void setXmlFileToLoad(juce::File fileToLoad){ xmlFileToLoad = juce::File(fileToLoad); }
 
 
     float* Current_conv_block;
@@ -193,8 +199,8 @@ private:
 
     // params
 
-    // there's a world in which we're using atomic for this, and it might come soon. But honeslty,
-    //I'm not sure it's necessary. I need to look into it more, but only one thread writes to these,
+    // There's a world in which we're using atomic for this, and it might come soon. It's on Juce develop branch.
+    // But honeslty, I'm not sure it's necessary. I need to look into it more, but only one thread writes to these,
     // and it would be difficult for this to cause an actual problem. Currently, this won't work as
     // std::atomic<float>* cannot be assigned to float*
     // Maybe this will work better with std::atomic_ref in c++20.

@@ -238,7 +238,7 @@ bool AuralizerAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* AuralizerAudioProcessor::createEditor()
 {
-    return new AuralizerAudioProcessorEditor (*this);
+    return new AuralizerAudioProcessorEditor (*this, parameters);
 }
 
 //==============================================================================
@@ -496,6 +496,24 @@ void AuralizerAudioProcessor::setSliderValue(String name, float value){
 //        Processor.SetOrientation(orientation);
     }
 
+}
+
+
+// returns the value of a slider so that PluginEditor may render sliders back to their correct positions.
+// will soon be unnecessary with ValueTreeState attachments. 
+float AuralizerAudioProcessor::getSliderValue(String name){
+    if (name == "wetSlider") return *wetAmt;
+    else if (name == "drySlider") return *dryAmt;
+    else if (name == "inSlider") return *inAmt;
+    else if (name == "outSlider") return *outAmt;
+    else if (name == "yawSlider") return *yawAmt;
+    else if (name == "pitchSlider") return *pitchAmt;
+    else if (name == "rollSlider") return *rollAmt;
+    else if (name == "distSlider") return *distAmt;
+    else if (name == "directSlider") return *dirAmt;
+    else if (name == "earlySlider") return *earlyAmt;
+    else if (name == "lateSlider") return *lateAmt;
+    else throw std::invalid_argument("received invalid slider name argument in getSliderValue");
 }
 
 
