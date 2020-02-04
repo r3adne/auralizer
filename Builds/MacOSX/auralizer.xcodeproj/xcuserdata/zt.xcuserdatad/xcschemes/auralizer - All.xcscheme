@@ -55,6 +55,15 @@
          runnableDebuggingMode = "0"
          FilePath = "/Users/zt/JUCE/extras/AudioPluginHost/Builds/MacOSX/build/Debug/AudioPluginHost.app">
       </PathRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "CABE5920382FEA79C4D4D752"
+            BuildableName = "auralizer - All"
+            BlueprintName = "auralizer - All"
+            ReferencedContainer = "container:auralizer.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

@@ -54,13 +54,15 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 
     for (int i = 0; i < NUM_SLIDERS; i++){
         Sliders[i]->setColour(Slider::trackColourId, Colours::darkgrey);
-        Sliders[i]->setColour(Slider::rotarySliderOutlineColourId, Colours::white);
-        Sliders[i]->setColour(Slider::rotarySliderFillColourId, Colours::darkgrey);
+        Sliders[i]->setColour(Slider::rotarySliderOutlineColourId, Colours::darkgrey);
+        Sliders[i]->setColour(Slider::rotarySliderFillColourId, Colours::white);
         Sliders[i]->setColour(Slider::thumbColourId, Colours::white);
         Sliders[i]->setSliderStyle(Slider::LinearBar);
         Sliders[i]->setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
         Sliders[i]->setPopupMenuEnabled(false);
 
+//        Sliders[i]->setNormalisableRange(valueTreeState.getParameterRange(vstids[i]));
+        Sliders[i]->setRange(0.0f, 2.0f);
         Sliders[i]->setValue(*valueTreeState.getRawParameterValue(vstids[i]), sendNotification);
         Labels[i]->attachToComponent(Sliders[i], false);
 
@@ -92,7 +94,7 @@ AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProc
 
     // yawSlider
     yawSlider.setRange(-180.0f, 180.0f, 0.1f);
-    yawSlider.setValue(0.0f, dontSendNotification);
+//    yawSlider.setValue(0.0f, dontSendNotification);
     yawSliderLabel.setText("yaw", dontSendNotification);
 
     // pitchSlider
@@ -174,6 +176,8 @@ void AuralizerAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+
+//    wetSlider.setRange(processo, <#double newMaximum#>)
 
     wetSlider.setValue((double) processor.getSliderValue("wetSlider"));
     drySlider.setValue((double) processor.getSliderValue("drySlider"));

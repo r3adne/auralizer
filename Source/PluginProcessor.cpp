@@ -101,10 +101,16 @@ void AuralizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 //    memset(&Current_conv_block, 0.0f, 2048);
 //    memset(&Current_mono_block, 0.0f, 2048);
 
+#ifndef ENCODER_DIST
     Encoder.Configure(AMBISONIC_ORDER_NUMBER, true, 0);
+#endif
+#ifdef ENCODER_DIST
+    EncoderDist.Configure(AMBISONIC_ORDER_NUMBER, TRUE, sampleRate);
+    EncoderDist.Reset();
+    EncoderDist.SetPosition(position);
+#endif
+
     Decoder.Configure(AMBISONIC_ORDER_NUMBER, true, kAmblib_Stereo);
-
-
 
     position.fAzimuth = *yawAmt;
     position.fDistance = *distAmt;
@@ -144,24 +150,25 @@ void AuralizerAudioProcessor::releaseResources()
 #ifndef JucePlugin_PreferredChannelConfigurations
 bool AuralizerAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-  #if JucePlugin_IsMidiEffect
-    ignoreUnused (layouts);
     return true;
-  #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
-    if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
-        return false;
-
-    // This checks if the input layout matches the output layout
-   #if ! JucePlugin_IsSynth
-    if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
-        return false;
-   #endif
-
-    return true;
-  #endif
+//  #if JucePlugin_IsMidiEffect
+//    ignoreUnused (layouts);
+//    return true;
+//  #else
+//    // This is the place where you check if the layout is supported.
+//    // In this template code we only support mono or stereo.
+//    if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
+//     && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
+//        return false;
+//
+//    // This checks if the input layout matches the output layout
+//   #if ! JucePlugin_IsSynth
+//    if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
+//        return false;
+//   #endif
+//
+//    return true;
+//  #endif
 }
 #endif
 
@@ -183,7 +190,13 @@ void AuralizerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
 
         // processes the mono input buffer through the ambisonic encoder.
         // note: mono_block also functions as the dry buffer, but it cannot in the evenutal stereo-stereo version.
+
+#ifndef ENCODER_DIST
         Encoder.Process(Current_mono_block, blocksize, &ambi_buffer); //
+#endif
+#ifdef ENCODER_DIST
+        EncoderDist.Process(Current_mono_block, blocksize, &ambi_buffer);
+#endif
 
         Processor.Process(&ambi_buffer, blocksize);
         // a loop through each channel of the ambisonic buffer
@@ -235,6 +248,10 @@ bool AuralizerAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
+
+//bool AuralizerAudioProcessor::isBusesLayoutSupported( const AuralizerAudioProcessor::BusesLayout& ) const {
+//    return true;
+//}
 
 AudioProcessorEditor* AuralizerAudioProcessor::createEditor()
 {
@@ -462,7 +479,8 @@ void AuralizerAudioProcessor::setSliderValue(String name, float value){
     } // ROLLTOGGLE
     else if (name == "distSlider"){ // DISTTOGGLE
         *distAmt = value; // DISTTOGGLE
-
+        position.fDistance = value;
+        EncoderDist.SetPosition(position);
     } // DISTTOGGLE
     else if (name == "directSlider"){
         previousValue = *dirAmt;
@@ -488,11 +506,16 @@ void AuralizerAudioProcessor::setSliderValue(String name, float value){
 
     }
     if (name == "yawSlider" || name == "pitchSlider" || name == "rollSlider" || name == "distSlider"){
-        Encoder.Refresh();
         Processor.SetOrientation(Orientation(*yawAmt, *pitchAmt, *rollAmt));
-        Processor.Refresh();
+//        Processor.Refresh();
         Decoder.Refresh();
-        Encoder.SetPosition(position);
+#ifndef ENCODER_DIST
+        Encoder.Refresh();
+#endif
+#ifdef ENCODER_DIST
+        EncoderDist.SetPosition(position);
+        EncoderDist.Refresh();
+#endif
 //        Processor.SetOrientation(orientation);
     }
 

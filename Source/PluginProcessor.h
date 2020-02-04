@@ -18,6 +18,8 @@
 #define MAX_BUFFER_LENGTH 4096  // this is the maximum length of the i/o buffers (and therefore the processing buffers). Most platforms don't run past 4096.
 #define CONV_BLOCK_SIZE 512
 
+#define ENCODER_DIST
+
 
 
 //==============================================================================
@@ -31,28 +33,28 @@ public:
     //==============================================================================
     AuralizerAudioProcessor() : parameters(*this, nullptr, Identifier("Auralizer"),
                                            { // we'll use NormalisableRange soon, but not now.
-//                       std::make_unique<AudioParameterFloat>("wetAmt", "Wet", NormalisableRange<float>(0.0f, 2.0f), 1.0f),
-//                       std::make_unique<AudioParameterFloat>("dryAmt", "Dry", NormalisableRange<float>(0.0f, 2.0f), 1.0f),
-//                       std::make_unique<AudioParameterFloat>("inAmt", "Input", NormalisableRange<float>(0.0f, 2.0f), 1.0f),
-//                       std::make_unique<AudioParameterFloat>("outAmt", "Output", NormalisableRange<float>(0.0f, 2.0f), 1.0f),
-//                       std::make_unique<AudioParameterFloat>("yawAmt", "Yaw", NormalisableRange<float>(-180.0f, 180.0f), 0.0f),
-//                       std::make_unique<AudioParameterFloat>("pitchAmt", "Pitch", NormalisableRange<float>(-90.0f, 90.0f), 0.0f),
-//                       std::make_unique<AudioParameterFloat>("rollAmt", "Roll", NormalisableRange<float>(-180.0f, 180.0f), 0.0f),
-//                       std::make_unique<AudioParameterFloat>("distAmt", "Distance", NormalisableRange<float>(0.0f, 50.0f), 5.0f),
-//                       std::make_unique<AudioParameterFloat>("dirAmt", "Direct Level", NormalisableRange<float>(0.0f, 2.0f), 1.0f),
-//                       std::make_unique<AudioParameterFloat>("earlyAmt", "Early Level", NormalisableRange<float>(0.0f, 2.0f), 1.0f),
-//                       std::make_unique<AudioParameterFloat>("lateAmt", "Late Level", NormalisableRange<float>(0.0f, 2.0f), 1.0f)
-                       std::make_unique<AudioParameterFloat>("wetAmt", "Wet", 0.0f, 2.0f, 1.0f),
-                       std::make_unique<AudioParameterFloat>("dryAmt", "Dry", 0.0f, 2.0f, 1.0f),
-                       std::make_unique<AudioParameterFloat>("inAmt", "Input", 0.0f, 2.0f, 1.0f),
-                       std::make_unique<AudioParameterFloat>("outAmt", "Output", 0.0f, 2.0f, 1.0f),
-                       std::make_unique<AudioParameterFloat>("yawAmt", "Yaw", -180.0f, 180.0f, 0.0f),
-                       std::make_unique<AudioParameterFloat>("pitchAmt", "Pitch", -90.0f, 90.0f, 0.0f),
-                       std::make_unique<AudioParameterFloat>("rollAmt", "Roll", -180.0f, 180.0f, 0.0f),
-                       std::make_unique<AudioParameterFloat>("distAmt", "Distance", 0.0f, 50.0f, 5.0f),
-                       std::make_unique<AudioParameterFloat>("dirAmt", "Direct Level", 0.0f, 2.0f, 1.0f),
-                       std::make_unique<AudioParameterFloat>("earlyAmt", "Early Level", 0.0f, 2.0f, 1.0f),
-                       std::make_unique<AudioParameterFloat>("lateAmt", "Late Level", 0.0f, 2.0f, 1.0f)
+                       std::make_unique<AudioParameterFloat>("wetAmt", "Wet", NormalisableRange<float>(0.0f, 2.0f), 0.5f),
+                       std::make_unique<AudioParameterFloat>("dryAmt", "Dry", NormalisableRange<float>(0.0f, 2.0f), 0.5f),
+                       std::make_unique<AudioParameterFloat>("inAmt", "Input", NormalisableRange<float>(0.0f, 2.0f), 0.5f),
+                       std::make_unique<AudioParameterFloat>("outAmt", "Output", NormalisableRange<float>(0.0f, 2.0f), 0.5f),
+                       std::make_unique<AudioParameterFloat>("yawAmt", "Yaw", NormalisableRange<float>(-180.0f, 180.0f), 0.5f),
+                       std::make_unique<AudioParameterFloat>("pitchAmt", "Pitch", NormalisableRange<float>(-90.0f, 90.0f), 0.5f),
+                       std::make_unique<AudioParameterFloat>("rollAmt", "Roll", NormalisableRange<float>(-180.0f, 180.0f), 0.5f),
+                       std::make_unique<AudioParameterFloat>("distAmt", "Distance", NormalisableRange<float>(0.0f, 50.0f), 0.1f),
+                       std::make_unique<AudioParameterFloat>("dirAmt", "Direct Level", NormalisableRange<float>(0.0f, 2.0f), 0.5f),
+                       std::make_unique<AudioParameterFloat>("earlyAmt", "Early Level", NormalisableRange<float>(0.0f, 2.0f), 0.5f),
+                       std::make_unique<AudioParameterFloat>("lateAmt", "Late Level", NormalisableRange<float>(0.0f, 2.0f), 0.5f)
+//                       std::make_unique<AudioParameterFloat>("wetAmt", "Wet", 0.0f, 2.0f, 1.0f),
+//                       std::make_unique<AudioParameterFloat>("dryAmt", "Dry", 0.0f, 2.0f, 1.0f),
+//                       std::make_unique<AudioParameterFloat>("inAmt", "Input", 0.0f, 2.0f, 1.0f),
+//                       std::make_unique<AudioParameterFloat>("outAmt", "Output", 0.0f, 2.0f, 1.0f),
+//                       std::make_unique<AudioParameterFloat>("yawAmt", "Yaw", -180.0f, 180.0f, 0.0f),
+//                       std::make_unique<AudioParameterFloat>("pitchAmt", "Pitch", -90.0f, 90.0f, 0.0f),
+//                       std::make_unique<AudioParameterFloat>("rollAmt", "Roll", -180.0f, 180.0f, 0.0f),
+//                       std::make_unique<AudioParameterFloat>("distAmt", "Distance", 0.0f, 50.0f, 5.0f),
+//                       std::make_unique<AudioParameterFloat>("dirAmt", "Direct Level", 0.0f, 2.0f, 1.0f),
+//                       std::make_unique<AudioParameterFloat>("earlyAmt", "Early Level", 0.0f, 2.0f, 1.0f),
+//                       std::make_unique<AudioParameterFloat>("lateAmt", "Late Level", 0.0f, 2.0f, 1.0f)
                        })
     {
 
@@ -62,6 +64,9 @@ public:
         Processed_conv_block =  (float *) malloc(MAX_BUFFER_LENGTH * sizeof(float));
         Current_conv_block   =  (float *) malloc(MAX_BUFFER_LENGTH * sizeof(float));
 
+        position.fDistance = 5.0f;
+        position.fElevation = 0.0f;
+        position.fAzimuth = 0.0f;
 
         wetAmt      =   parameters.getRawParameterValue("wetAmt");
         dryAmt      =   parameters.getRawParameterValue("dryAmt");
@@ -123,6 +128,10 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     bool loadPreset();
 
+//    bool checkBusesLayoutSupported(const BusesLayout&) const override{
+//        return true;
+//    }
+
     void setSliderValue(String name, float Value);
     float getSliderValue(String name);
     void setNewPresetName(String name){ new_preset_name = name; };
@@ -153,8 +162,12 @@ private:
     const float* fullIR_ptr[16];
 
     // ambisonic processors
+#ifndef ENCODER_DIST
     CAmbisonicEncoder Encoder;
-//    CAmbisonicEncoderDist EncoderDist;
+#endif
+#ifdef ENCODER_DIST
+    CAmbisonicEncoderDist EncoderDist;
+#endif
     CAmbisonicDecoder Decoder;
     CAmbisonicProcessor Processor;
 //    CAmbisonicZoomer Zoomer;
