@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.037322"
+            timestampString = "602616810.2057821"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "302"
-            endingLineNumber = "302"
+            startingLineNumber = "295"
+            endingLineNumber = "295"
             landmarkName = "AuralizerAudioProcessor::setStateInformation (const void* data, int sizeInBytes)"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.037686"
+            timestampString = "602616810.20592"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "385"
-            endingLineNumber = "385"
+            startingLineNumber = "378"
+            endingLineNumber = "378"
             landmarkName = "AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath)"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.037931"
+            timestampString = "602616810.206012"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "434"
-            endingLineNumber = "434"
+            startingLineNumber = "422"
+            endingLineNumber = "422"
             landmarkName = "AuralizerAudioProcessor::updateIRs()"
             landmarkType = "7">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.038172"
+            timestampString = "602616810.206112"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "407"
-            endingLineNumber = "407"
+            startingLineNumber = "400"
+            endingLineNumber = "400"
             landmarkName = "AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath)"
             landmarkType = "7">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.038401"
+            timestampString = "602616810.20619"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "96"
-            endingLineNumber = "96"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
             landmarkName = "AuralizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)"
             landmarkType = "7">
          </BreakpointContent>
@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.038631"
+            timestampString = "602616810.206267"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "242"
-            endingLineNumber = "242"
+            startingLineNumber = "235"
+            endingLineNumber = "235"
             landmarkName = "AuralizerAudioProcessor::processBlock (AudioBuffer&lt;float&gt;&amp; buffer, MidiBuffer&amp; midiMessages)"
             landmarkType = "7">
          </BreakpointContent>
@@ -102,31 +102,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.038861"
+            timestampString = "602616810.206342"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "277"
-            endingLineNumber = "277"
-            landmarkName = "AuralizerAudioProcessor::setStateInformation (const void* data, int sizeInBytes)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.039088"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "264"
-            endingLineNumber = "264"
+            startingLineNumber = "270"
+            endingLineNumber = "270"
             landmarkName = "AuralizerAudioProcessor::getStateInformation (MemoryBlock&amp; destData)"
             landmarkType = "7">
          </BreakpointContent>
@@ -138,13 +122,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.039317"
+            timestampString = "602616810.206431"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "424"
-            endingLineNumber = "424"
-            landmarkName = "AuralizerAudioProcessor::updateIRs()"
-            landmarkType = "7">
+            startingLineNumber = "257"
+            endingLineNumber = "257"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -154,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.039542"
+            timestampString = "602616810.206575"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "443"
-            endingLineNumber = "443"
+            startingLineNumber = "431"
+            endingLineNumber = "431"
             landmarkName = "AuralizerAudioProcessor::updateIRs()"
             landmarkType = "7">
          </BreakpointContent>
@@ -166,7 +150,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../../JUCE/modules/juce_audio_plugin_client/Standalone/juce_StandaloneFilterWindow.h"
@@ -214,7 +198,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../../JUCE/modules/juce_audio_plugin_client/Standalone/juce_StandaloneFilterWindow.h"
@@ -234,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.039849"
+            timestampString = "602616810.206766"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "211"
-            endingLineNumber = "211"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
             landmarkName = "AuralizerAudioProcessor::processBlock (AudioBuffer&lt;float&gt;&amp; buffer, MidiBuffer&amp; midiMessages)"
             landmarkType = "7">
          </BreakpointContent>
@@ -250,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.040084"
+            timestampString = "602616810.206851"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "207"
-            endingLineNumber = "207"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
             landmarkName = "AuralizerAudioProcessor::processBlock (AudioBuffer&lt;float&gt;&amp; buffer, MidiBuffer&amp; midiMessages)"
             landmarkType = "7">
          </BreakpointContent>
@@ -266,12 +250,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.040311"
+            timestampString = "602616810.206928"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "182"
-            endingLineNumber = "182"
-            landmarkName = "AuralizerAudioProcessor::processBlock (AudioBuffer&lt;float&gt;&amp; buffer, MidiBuffer&amp; midiMessages)"
+            startingLineNumber = "175"
+            endingLineNumber = "175"
+            landmarkName = "AuralizerAudioProcessor::isBusesLayoutSupported (const BusesLayout&amp; layouts)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -282,11 +266,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.0405411"
+            timestampString = "602616810.207004"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "401"
-            endingLineNumber = "401"
+            startingLineNumber = "394"
+            endingLineNumber = "394"
             landmarkName = "AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath)"
             landmarkType = "7">
          </BreakpointContent>
@@ -298,11 +282,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.040767"
+            timestampString = "602616810.207077"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "321"
-            endingLineNumber = "321"
+            startingLineNumber = "314"
+            endingLineNumber = "314"
             landmarkName = "AuralizerAudioProcessor::loadPreset()"
             landmarkType = "7">
          </BreakpointContent>
@@ -314,11 +298,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.040994"
+            timestampString = "602616810.20715"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "389"
-            endingLineNumber = "389"
+            startingLineNumber = "382"
+            endingLineNumber = "382"
             landmarkName = "AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath)"
             landmarkType = "7">
          </BreakpointContent>
@@ -330,11 +314,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.0412199"
+            timestampString = "602616810.207225"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "405"
-            endingLineNumber = "405"
+            startingLineNumber = "398"
+            endingLineNumber = "398"
             landmarkName = "AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath)"
             landmarkType = "7">
          </BreakpointContent>
@@ -346,28 +330,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.04145"
+            timestampString = "602616810.207299"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "431"
-            endingLineNumber = "431"
-            landmarkName = "AuralizerAudioProcessor::updateIRs()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.041676"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "425"
-            endingLineNumber = "425"
-            landmarkName = "AuralizerAudioProcessor::updateIRs()"
+            startingLineNumber = "419"
+            endingLineNumber = "419"
+            landmarkName = "AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -474,11 +442,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.041999"
+            timestampString = "602616810.2074929"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "441"
-            endingLineNumber = "441"
+            startingLineNumber = "429"
+            endingLineNumber = "429"
             landmarkName = "AuralizerAudioProcessor::updateIRs()"
             landmarkType = "7">
          </BreakpointContent>
@@ -490,13 +458,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.042227"
+            timestampString = "602616810.20757"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "184"
-            endingLineNumber = "184"
-            landmarkName = "AuralizerAudioProcessor::processBlock (AudioBuffer&lt;float&gt;&amp; buffer, MidiBuffer&amp; midiMessages)"
-            landmarkType = "7">
+            startingLineNumber = "177"
+            endingLineNumber = "177"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -506,11 +474,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.0424581"
+            timestampString = "602616810.207644"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "190"
-            endingLineNumber = "190"
+            startingLineNumber = "183"
+            endingLineNumber = "183"
             landmarkName = "AuralizerAudioProcessor::processBlock (AudioBuffer&lt;float&gt;&amp; buffer, MidiBuffer&amp; midiMessages)"
             landmarkType = "7">
          </BreakpointContent>
@@ -826,11 +794,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.0429389"
+            timestampString = "602616810.208058"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "230"
-            endingLineNumber = "230"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
             landmarkName = "AuralizerAudioProcessor::processBlock (AudioBuffer&lt;float&gt;&amp; buffer, MidiBuffer&amp; midiMessages)"
             landmarkType = "7">
          </BreakpointContent>
@@ -842,11 +810,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.04317"
+            timestampString = "602616810.208147"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "201"
-            endingLineNumber = "201"
+            startingLineNumber = "194"
+            endingLineNumber = "194"
             landmarkName = "AuralizerAudioProcessor::processBlock (AudioBuffer&lt;float&gt;&amp; buffer, MidiBuffer&amp; midiMessages)"
             landmarkType = "7">
          </BreakpointContent>
@@ -858,11 +826,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.0434099"
+            timestampString = "602616810.2082421"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "204"
-            endingLineNumber = "204"
+            startingLineNumber = "197"
+            endingLineNumber = "197"
             landmarkName = "AuralizerAudioProcessor::processBlock (AudioBuffer&lt;float&gt;&amp; buffer, MidiBuffer&amp; midiMessages)"
             landmarkType = "7">
          </BreakpointContent>
@@ -874,11 +842,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.043635"
+            timestampString = "602616810.208318"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "215"
-            endingLineNumber = "215"
+            startingLineNumber = "208"
+            endingLineNumber = "208"
             landmarkName = "AuralizerAudioProcessor::processBlock (AudioBuffer&lt;float&gt;&amp; buffer, MidiBuffer&amp; midiMessages)"
             landmarkType = "7">
          </BreakpointContent>
@@ -938,7 +906,39 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.043995"
+            timestampString = "602616810.20847"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "436"
+            endingLineNumber = "436"
+            landmarkName = "AuralizerAudioProcessor::updateIRs()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../Source/PluginProcessor.cpp"
+            timestampString = "602616810.208589"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "256"
+            endingLineNumber = "256"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../Source/PluginProcessor.cpp"
+            timestampString = "602616810.2087229"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "448"
@@ -954,43 +954,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.044234"
+            timestampString = "602616810.208856"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "263"
-            endingLineNumber = "263"
-            landmarkName = "AuralizerAudioProcessor::getStateInformation (MemoryBlock&amp; destData)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.044461"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "460"
-            endingLineNumber = "460"
-            landmarkName = "AuralizerAudioProcessor::setSliderValue(String name, float value)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.044726"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "323"
-            endingLineNumber = "323"
+            startingLineNumber = "316"
+            endingLineNumber = "316"
             landmarkName = "AuralizerAudioProcessor::loadPreset()"
             landmarkType = "7">
          </BreakpointContent>
@@ -998,27 +966,27 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.044952"
+            timestampString = "602616810.209003"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "268"
-            endingLineNumber = "268"
-            landmarkName = "AuralizerAudioProcessor::getStateInformation (MemoryBlock&amp; destData)"
+            startingLineNumber = "261"
+            endingLineNumber = "261"
+            landmarkName = "AuralizerAudioProcessor::createEditor()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginEditor.cpp"
-            timestampString = "598573186.31119"
+            timestampString = "602616028.240097"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "193"
@@ -1030,11 +998,11 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginEditor.cpp"
-            timestampString = "598573186.311257"
+            timestampString = "602616028.240147"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "18"
@@ -1046,11 +1014,11 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginEditor.cpp"
-            timestampString = "598573186.3113101"
+            timestampString = "602616028.24019"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "67"
@@ -1062,17 +1030,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginEditor.cpp"
-            timestampString = "598573186.311359"
+            timestampString = "602616028.240232"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "130"
             endingLineNumber = "130"
             landmarkName = "AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor (AuralizerAudioProcessor&amp; p, AudioProcessorValueTreeState&amp; vts)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor(AuralizerAudioProcessor&amp;, juce::AudioProcessorValueTreeState&amp;)"
+                  moduleName = "auralizer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/zt/Documents/EP-491/auralizer/Source/PluginEditor.cpp"
+                  timestampString = "602616028.660544"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "130"
+                  endingLineNumber = "130"
+                  offsetFromSymbolStart = "7118">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "AuralizerAudioProcessorEditor::AuralizerAudioProcessorEditor(AuralizerAudioProcessor&amp;, juce::AudioProcessorValueTreeState&amp;)::$_0::operator()() const"
+                  moduleName = "auralizer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/zt/Documents/EP-491/auralizer/Source/PluginEditor.cpp"
+                  timestampString = "602616028.662971"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "130"
+                  endingLineNumber = "130"
+                  offsetFromSymbolStart = "19">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1082,23 +1082,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.04524"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "499"
-            endingLineNumber = "499"
-            landmarkName = "AuralizerAudioProcessor::setSliderValue(String name, float value)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.045467"
+            timestampString = "602616810.209196"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "487"
@@ -1110,16 +1094,48 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
-            timestampString = "602471633.045688"
+            timestampString = "602616810.20929"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "482"
-            endingLineNumber = "482"
+            startingLineNumber = "475"
+            endingLineNumber = "475"
             landmarkName = "AuralizerAudioProcessor::setSliderValue(String name, float value)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../Source/PluginProcessor.cpp"
+            timestampString = "602616810.209373"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "470"
+            endingLineNumber = "470"
+            landmarkName = "AuralizerAudioProcessor::setSliderValue(String name, float value)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../Source/PluginEditor.cpp"
+            timestampString = "602616028.241147"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
+            landmarkName = "AuralizerAudioProcessorEditor::resized()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="Uonl3S" name="auralizer" projectType="audioplug" jucerVersion="5.4.3"
+<JUCERPROJECT id="Uonl3S" name="auralizer" projectType="audioplug" jucerVersion="5.4.4"
               version="0.01" cppLanguageStandard="14">
   <MAINGROUP id="ErdQTp" name="auralizer">
     <GROUP id="{72388854-B9A0-C410-E44B-53CD04B91E66}" name="FFTConvolver">
@@ -22,6 +22,7 @@
       <FILE id="Y03zmO" name="Utilities.h" compile="0" resource="0" file="Source/FFTConvolver/Utilities.h"/>
     </GROUP>
     <GROUP id="{7071CF97-D38A-7996-548C-9F3A268104CA}" name="Source">
+      <FILE id="RdKCyk" name="Buffer.h" compile="0" resource="0" file="Source/Buffer.h"/>
       <FILE id="jftN5L" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="RaBNrt" name="PluginProcessor.h" compile="0" resource="0"

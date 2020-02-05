@@ -15,7 +15,10 @@
 
 
 #define AMBISONIC_ORDER_NUMBER 2
-#define MAX_BUFFER_LENGTH 4096  // this is the maximum length of the i/o buffers (and therefore the processing buffers). Most platforms don't run past 4096.
+
+// this is the maximum length of the i/o buffers (and therefore the processing buffers). Most platforms don't run past 4096. Check this if we ever get aax license.
+#define MAX_BUFFER_LENGTH 4096
+
 #define CONV_BLOCK_SIZE 512
 
 #define ENCODER_DIST
@@ -25,14 +28,14 @@
 //==============================================================================
 /**
 */
+// used to grab the number of channels in an ambisonic signal
 const int getOrder[4] = {1, 4, 9, 16};
 
 class AuralizerAudioProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
-    AuralizerAudioProcessor() : parameters(*this, nullptr, Identifier("Auralizer"),
-                                           { // we'll use NormalisableRange soon, but not now.
+    AuralizerAudioProcessor() : parameters(*this, nullptr, Identifier("Auralizer"), {
                        std::make_unique<AudioParameterFloat>("wetAmt", "Wet", NormalisableRange<float>(0.0f, 2.0f), 0.5f),
                        std::make_unique<AudioParameterFloat>("dryAmt", "Dry", NormalisableRange<float>(0.0f, 2.0f), 0.5f),
                        std::make_unique<AudioParameterFloat>("inAmt", "Input", NormalisableRange<float>(0.0f, 2.0f), 0.5f),
@@ -44,25 +47,20 @@ public:
                        std::make_unique<AudioParameterFloat>("dirAmt", "Direct Level", NormalisableRange<float>(0.0f, 2.0f), 0.5f),
                        std::make_unique<AudioParameterFloat>("earlyAmt", "Early Level", NormalisableRange<float>(0.0f, 2.0f), 0.5f),
                        std::make_unique<AudioParameterFloat>("lateAmt", "Late Level", NormalisableRange<float>(0.0f, 2.0f), 0.5f)
-//                       std::make_unique<AudioParameterFloat>("wetAmt", "Wet", 0.0f, 2.0f, 1.0f),
-//                       std::make_unique<AudioParameterFloat>("dryAmt", "Dry", 0.0f, 2.0f, 1.0f),
-//                       std::make_unique<AudioParameterFloat>("inAmt", "Input", 0.0f, 2.0f, 1.0f),
-//                       std::make_unique<AudioParameterFloat>("outAmt", "Output", 0.0f, 2.0f, 1.0f),
-//                       std::make_unique<AudioParameterFloat>("yawAmt", "Yaw", -180.0f, 180.0f, 0.0f),
-//                       std::make_unique<AudioParameterFloat>("pitchAmt", "Pitch", -90.0f, 90.0f, 0.0f),
-//                       std::make_unique<AudioParameterFloat>("rollAmt", "Roll", -180.0f, 180.0f, 0.0f),
-//                       std::make_unique<AudioParameterFloat>("distAmt", "Distance", 0.0f, 50.0f, 5.0f),
-//                       std::make_unique<AudioParameterFloat>("dirAmt", "Direct Level", 0.0f, 2.0f, 1.0f),
-//                       std::make_unique<AudioParameterFloat>("earlyAmt", "Early Level", 0.0f, 2.0f, 1.0f),
-//                       std::make_unique<AudioParameterFloat>("lateAmt", "Late Level", 0.0f, 2.0f, 1.0f)
                        })
     {
-
+        // required to read audio files later...
         formatManager.registerBasicFormats();
 
-        Current_mono_block   =  (float *) malloc(MAX_BUFFER_LENGTH * sizeof(float));
-        Processed_conv_block =  (float *) malloc(MAX_BUFFER_LENGTH * sizeof(float));
-        Current_conv_block   =  (float *) malloc(MAX_BUFFER_LENGTH * sizeof(float));
+        // using new[] here despite potentially it being better to use std::array for this?
+        Convolvers = new fftconvolver::FFTConvolver [getOrder[AMBISONIC_ORDER_NUMBER]];
+
+
+        // we'll use std::arrays for this, but perhaps in the future I'll write a
+        // nice wrapper with sbrk() and whatnot which mimics realloc but guarentees
+        // that if the new length is smaller than the current one no move happens.
+
+
 
         position.fDistance = 5.0f;
         position.fElevation = 0.0f;
@@ -80,11 +78,6 @@ public:
         earlyAmt    =   parameters.getRawParameterValue("earlyAmt");
         lateAmt     =   parameters.getRawParameterValue("lateAmt");
 
-
-//        orientation = {;
-//        for (int i = 0; i < getOrder[AMBISONIC_ORDER_NUMBER]; i++){
-//            Convolvers[i] = fftconvolver::FFTConvolver();
-//        }
 
 //        orientation = Orientation(*yawAmt, *pitchAmt, *rollAmt); // yaw, pitch, roll
 
@@ -139,8 +132,9 @@ public:
     void setXmlFileToLoad(juce::File fileToLoad){ xmlFileToLoad = juce::File(fileToLoad); }
 
 
-    float* Current_conv_block;
-    float* Processed_conv_block;
+//    float* Current_conv_block;
+//    float* Processed_conv_block;
+
 private:
     AudioProcessorValueTreeState parameters;
 
@@ -155,13 +149,15 @@ private:
     AudioBuffer<float> Ambi_block;
     AudioBuffer<float> mono_block;
 //    AudioBuffer<float> Current_conv_block;
-    float* Current_mono_block;
+//    float* Current_mono_block;
 
     
 
     const float* fullIR_ptr[16];
 
     // ambisonic processors
+    // note: there are still currently different versions of the encoder -- one with and one without distance. Further
+    // testing is needed to determine if one is better.
 #ifndef ENCODER_DIST
     CAmbisonicEncoder Encoder;
 #endif
@@ -175,17 +171,11 @@ private:
     PolarPoint position;
 //    Orientation orientation;
 
-
-//    juce::dsp::ProcessorChain<juce::dsp::Convolution> convolutionEngine;
-    // add processorDuplicator for convolution
-    
-
     // preset and IR directory system
     String new_preset_name = "default_presetSaveName";
     String preset_directory;
     String IR_directory = "~/Documents/auralizer/presets/";
 
-    //    std::filesystem::path
     juce::File xmlFileToLoad;
     juce::File dirIRFile;
     juce::File earlyIRFile;
@@ -215,7 +205,7 @@ private:
     // There's a world in which we're using atomic for this, and it might come soon. It's on Juce develop branch.
     // But honeslty, I'm not sure it's necessary. I need to look into it more, but only one thread writes to these,
     // and it would be difficult for this to cause an actual problem. Currently, this won't work as
-    // std::atomic<float>* cannot be assigned to float*
+    // std::atomic<float>* cannot be assigned to float*, and float* is what parameters.getRawParameterValue() returns.
     // Maybe this will work better with std::atomic_ref in c++20.
 
 //    std::atomic<float>* wetAmt = nullptr;
@@ -226,8 +216,8 @@ private:
 //
 //    std::atomic<float>* yawAmt   = nullptr;
 //    std::atomic<float>* pitchAmt = nullptr;
-//    std::atomic<float>* rollAmt  = nullptr; // ROLLTOGGLE
-//    std::atomic<float>* distAmt = nullptr; // DISTTOGGLE
+//    std::atomic<float>* rollAmt  = nullptr;
+//    std::atomic<float>* distAmt = nullptr;
 //
 //    std::atomic<float>* dirAmt = nullptr;
 //    std::atomic<float>* earlyAmt = nullptr;
@@ -245,14 +235,13 @@ private:
     float* earlyAmt = nullptr;
     float* lateAmt = nullptr;
 
+
+    std::array<float, MAX_BUFFER_LENGTH> Current_mono_block;
+    std::array<float, MAX_BUFFER_LENGTH> Processed_conv_block;
+    std::array<float, MAX_BUFFER_LENGTH> Current_conv_block;
+
     // maybe make this std::array<FFTConvolver> ?
-    fftconvolver::FFTConvolver Convolvers[getOrder[AMBISONIC_ORDER_NUMBER]];
-
-    
-
-
-
-    int _block_size, _sample_rate;
+    fftconvolver::FFTConvolver *Convolvers;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AuralizerAudioProcessor)

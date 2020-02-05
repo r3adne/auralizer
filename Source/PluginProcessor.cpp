@@ -17,12 +17,10 @@
 
 AuralizerAudioProcessor::~AuralizerAudioProcessor()
 {
-    // lock processing during destruction
+    // lock processing before destruction, just in case
     processlock = true;
 
-    mono_block.clear();
-    Ambi_block.clear();
-    ambi_buffer.Reset();
+
     
 }
 
@@ -66,8 +64,7 @@ double AuralizerAudioProcessor::getTailLengthSeconds() const
 
 int AuralizerAudioProcessor::getNumPrograms()
 {
-    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
-                // so this should be at least 1, even if you're not really implementing programs.
+    return 1;
 }
 
 int AuralizerAudioProcessor::getCurrentProgram()
@@ -91,8 +88,10 @@ void AuralizerAudioProcessor::changeProgramName (int index, const String& newNam
 //==============================================================================
 void AuralizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    _block_size = samplesPerBlock;
-    _sample_rate = sampleRate;
+    const int _block_size = samplesPerBlock; //static_cast<int>(samplesPerBlock);
+    const int _sample_rate = sampleRate;
+
+
 
     mono_block.setSize(1, _block_size);
     Ambi_block.setSize(getOrder[AMBISONIC_ORDER_NUMBER], samplesPerBlock);
@@ -100,6 +99,11 @@ void AuralizerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 //    convBlock_ptr = Current_conv_block.getReadPointer(0);
 //    memset(&Current_conv_block, 0.0f, 2048);
 //    memset(&Current_mono_block, 0.0f, 2048);
+    
+
+    Current_conv_block.fill(0.0f);
+    Current_mono_block.fill(0.0f);
+    Processed_conv_block.fill(0.0f);
 
 #ifndef ENCODER_DIST
     Encoder.Configure(AMBISONIC_ORDER_NUMBER, true, 0);
@@ -139,11 +143,10 @@ void AuralizerAudioProcessor::releaseResources()
     Ambi_block.clear();
     mono_block.clear();
 
-    // set float* style buffers to 0
-    memset(Current_conv_block, 0.0f, MAX_BUFFER_LENGTH * sizeof(float));
-    memset(Processed_conv_block, 0.0f, MAX_BUFFER_LENGTH * sizeof(float));
-    memset(Current_mono_block, 0.0f, MAX_BUFFER_LENGTH * sizeof(float));
-
+//
+//    Current_conv_block.fill(0.0f);
+//    Processed_conv_block.fill(0.0f);
+//    Current_mono_block.fill(0.0f);
 
 }
 
@@ -175,8 +178,8 @@ bool AuralizerAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 void AuralizerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
+    int totalNumInputChannels  = getTotalNumInputChannels();
+    int totalNumOutputChannels = getTotalNumOutputChannels();
     int blocksize = buffer.getNumSamples();
 
 
@@ -195,7 +198,7 @@ void AuralizerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         Encoder.Process(Current_mono_block, blocksize, &ambi_buffer); //
 #endif
 #ifdef ENCODER_DIST
-        EncoderDist.Process(Current_mono_block, blocksize, &ambi_buffer);
+        EncoderDist.Process(Current_mono_block.data(), blocksize, &ambi_buffer);
 #endif
 
         Processor.Process(&ambi_buffer, blocksize);
@@ -205,18 +208,18 @@ void AuralizerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
 
 
             // copies the ambisonic buffer's current channel to the Current_conv_block.
-            ambi_buffer.ExtractStream(Current_conv_block, current_ambi_channel, blocksize);
+            ambi_buffer.ExtractStream(Current_conv_block.data(), current_ambi_channel, blocksize);
 
 
             if (! processlock){
             // convolves with the current channel...
-            Convolvers[current_ambi_channel].process(Current_conv_block, Processed_conv_block, (size_t) blocksize);
+            Convolvers[current_ambi_channel].process(Current_conv_block.data(), Processed_conv_block.data(), (size_t) blocksize);
 
             // puts the convolved stream back into the ambisonic buffer...
-            ambi_buffer.InsertStream(Processed_conv_block, current_ambi_channel, blocksize);
+            ambi_buffer.InsertStream(Processed_conv_block.data(), current_ambi_channel, blocksize);
             }
             else{
-                ambi_buffer.InsertStream(Current_conv_block, current_ambi_channel, blocksize);
+                ambi_buffer.InsertStream(Current_conv_block.data(), current_ambi_channel, blocksize);
             }
         }
 
@@ -409,13 +412,8 @@ void AuralizerAudioProcessor::loadIRs(boost::filesystem::path IRDirPath){
         earlyReader->read(earlyIR.getArrayOfWritePointers(), getOrder[AMBISONIC_ORDER_NUMBER], 0, (int) earlyReader->lengthInSamples);
         lateReader->read (lateIR.getArrayOfWritePointers(),  getOrder[AMBISONIC_ORDER_NUMBER], 0, (int) lateReader->lengthInSamples );
 
-    // Akito's good ideas
-    // irs just switch pointer instead of switching buffer entirely.
-    // stft on new IR is done in separate thread from stft on new samples/convolution.
-    // override the function that checks valid input/output config and add mutex.
-
         updateIRs();
-//        dirReader->
+        audioFormat = nullptr;
     }
     else throw std::invalid_argument("Directory does not contain impulse response \".wav\" files.");
 }
