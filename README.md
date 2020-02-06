@@ -12,14 +12,14 @@ I'm also working on some algorithmic ambisonic reverbs, which could be a fun add
 ### To do:
 
 * Implement normalisableRanges to ensure that param values from Editor are reaching Processor correctly.
-* Fix plugin parameter storage
+<!--* Fix plugin parameter storage-->
 * Make an init preset which is loaded automatically upon launch
 * Redo the processor so that it conditionally compiles into mono-mono, mono-stereo, stereo-stereo (eventually, we may do more than that because we hyphothetically can do basically anything with the HOA internally processed signal)
 * Make maybe 30-40 presets
 * Make a preset loading system which lists all presets in a dropdown instead of using fileChooser
 * Make an installer for non-dev users, distribute binaries
 * Add IR reversal
-* Add IR scaling (time/pitch stretching) possibly independantly through the stored STFT of the IR
+* Add IR scaling (time/pitch stretching) possibly independently through the stored STFT of the IR
 * Add binaural output DSP
 * Add virtual microphone DSP w/ some basic filtering and waveshaping
 * Create new UI which has distance, binaural vs speaker array output, (zooming?), and maybe some more
