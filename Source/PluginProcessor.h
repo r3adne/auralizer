@@ -155,6 +155,7 @@ private:
 
     const float* fullIR_ptr[16];
 
+
     // ambisonic processors
     // note: there are still currently different versions of the encoder -- one with and one without distance. Further
     // testing is needed to determine if one is better.

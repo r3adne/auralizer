@@ -19,9 +19,6 @@ AuralizerAudioProcessor::~AuralizerAudioProcessor()
 {
     // lock processing before destruction, just in case
     processlock = true;
-
-
-    
 }
 
 //==============================================================================
